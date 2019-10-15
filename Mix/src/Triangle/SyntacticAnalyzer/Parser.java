@@ -344,13 +344,8 @@ public class Parser {
         finish(commandPos);
         commandAST = new IfCommand(eAST, c1AST, c2AST, commandPos);
       }
-      break;   
-    case Token.SEMICOLON:
-    case Token.END:
-    case Token.ELSE:
-    case Token.IN:
-    case Token.SKIP:
-       
+      break;
+    
       
     /*case Token.WHILE:
       {
@@ -362,7 +357,20 @@ public class Parser {
         commandAST = new WhileCommand(eAST, cAST, commandPos);
       }
       break;
-    */ 
+    */
+    case Token.SKIP:
+      {
+        acceptIt();
+        finish(commandPos);
+        commandAST = new EmptyCommand(commandPos);
+      }
+      break;
+    case Token.SEMICOLON:
+    case Token.END:
+    case Token.ELSE:
+    case Token.IN:
+    //case Token.EOT:
+    
 // Se reemplaza el comando de EOT ("") por la palabra "skip"
 
       finish(commandPos);
