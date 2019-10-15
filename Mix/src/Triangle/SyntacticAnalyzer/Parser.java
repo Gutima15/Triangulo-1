@@ -268,10 +268,9 @@ public class Parser {
     Command commandAST = null; // in case there's a syntactic error
 
     SourcePosition commandPos = new SourcePosition();
-    start(commandPos);
-
+    start(commandPos);  
     switch (currentToken.kind) {
-
+        
     case Token.IDENTIFIER:
       {
         Identifier iAST = parseIdentifier();
@@ -292,38 +291,68 @@ public class Parser {
         }
       }
       break;
-
-    case Token.BEGIN:
+    case Token.LOOP:
+    {
+        acceptIt();
+        //commandAST = parseCommand();
+        switch (currentToken.kind){
+            case Token.WHILE:
+            {
+                
+            }
+            case Token.UNTIL:
+            {
+                
+            }
+            case Token.FOR:
+            {
+                
+            }
+            case Token.DO:    
+        }
+        //
+    }
+//El caso del indentificardor de arriba se conserva como el original: Jorge
+    /*case Token.BEGIN:
       acceptIt();
       commandAST = parseCommand();
       accept(Token.END);
       break;
-
+    */  
+    
     case Token.LET:
       {
         acceptIt();
         Declaration dAST = parseDeclaration();
         accept(Token.IN);
-        Command cAST = parseSingleCommand();
+        Command cAST = parseCommand(); //Se cambia el procesar parseSingleCommand por parseCommand
+        accept(Token.END); //Se agrega la frase END al final para que sea aceptado el comando
         finish(commandPos);
         commandAST = new LetCommand(dAST, cAST, commandPos);
       }
       break;
-
+      
     case Token.IF:
       {
         acceptIt();
         Expression eAST = parseExpression();
         accept(Token.THEN);
-        Command c1AST = parseSingleCommand();
+        Command c1AST = parseCommand(); //Se cambia el procesar parseSingleCommand por parseCommand
         accept(Token.ELSE);
-        Command c2AST = parseSingleCommand();
+        Command c2AST = parseCommand(); //Se cambia el procesar parseSingleCommand por parseCommand
+        accept(Token.END); //Se agrega la frase END al final para que sea aceptado el comando
         finish(commandPos);
         commandAST = new IfCommand(eAST, c1AST, c2AST, commandPos);
       }
-      break;
-
-    case Token.WHILE:
+      break;   
+    case Token.SEMICOLON:
+    case Token.END:
+    case Token.ELSE:
+    case Token.IN:
+    case Token.SKIP:
+       
+      
+    /*case Token.WHILE:
       {
         acceptIt();
         Expression eAST = parseExpression();
@@ -333,12 +362,8 @@ public class Parser {
         commandAST = new WhileCommand(eAST, cAST, commandPos);
       }
       break;
-
-    case Token.SEMICOLON:
-    case Token.END:
-    case Token.ELSE:
-    case Token.IN:
-    case Token.EOT:
+    */ 
+// Se reemplaza el comando de EOT ("") por la palabra "skip"
 
       finish(commandPos);
       commandAST = new EmptyCommand(commandPos);
@@ -590,10 +615,10 @@ public class Parser {
 
     SourcePosition declarationPos = new SourcePosition();
     start(declarationPos);
-    declarationAST = parseSingleDeclaration();
+    declarationAST = parseCompoundDeclaration();
     while (currentToken.kind == Token.SEMICOLON) {
       acceptIt();
-      Declaration d2AST = parseSingleDeclaration();
+      Declaration d2AST = parseCompoundDeclaration();
       finish(declarationPos);
       declarationAST = new SequentialDeclaration(declarationAST, d2AST,
         declarationPos);
@@ -601,7 +626,7 @@ public class Parser {
     return declarationAST;
   }
 
-  Declaration parseSingleDeclaration() throws SyntaxError {
+  Declaration parseCompoundDeclaration() throws SyntaxError {
     Declaration declarationAST = null; // in case there's a syntactic error
 
     SourcePosition declarationPos = new SourcePosition();

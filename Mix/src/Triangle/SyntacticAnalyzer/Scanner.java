@@ -178,7 +178,7 @@ public final class Scanner {
 
     case SourceFile.EOT:
       return Token.EOT;
-
+        
     default:
       takeIt();
       return Token.ERROR;
