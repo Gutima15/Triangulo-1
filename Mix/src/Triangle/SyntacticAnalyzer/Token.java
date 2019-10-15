@@ -37,6 +37,7 @@ final class Token extends Object {
           searching = false;
         } else {
           currentKind ++;
+            System.out.println(tokenTable[currentKind] + " spell: "+spelling);
         }
       }
     } else
@@ -67,64 +68,84 @@ final class Token extends Object {
     OPERATOR	= 3,
 
     // reserved words - must be in alphabetical order...
-    ARRAY		= 4,
-    BEGIN		= 5,
-    CONST		= 6,
-    DO			= 7,
-    ELSE		= 8,
-    END			= 9,
-    FUNC		= 10,
-    IF			= 11,
-    IN			= 12,
-    LET			= 13,
-    OF			= 14,
-    PROC		= 15,
-    RECORD		= 16,
-    THEN		= 17,
-    TYPE		= 18,
-    VAR			= 19,
-    WHILE		= 20,
+    AND         = 4, //
+   // BEGIN	= 5,
+    ARRAY 	= 5,
+    CONST 	= 6,
+    DO 		= 7,
+    ELSE 	= 8,
+    END 	= 9,
+    FOR 	= 10, //Se agrega el token FOR para realizar las modificaciones correspondientes en single-command
+    FUNC 	= 11,
+    IF 		= 12,
+    IN 		= 13,
+    INIT 	= 14, //
+    LET 	= 15,
+    LOCAL 	= 16, //
+    LOOP 	= 17, //Se agrega el token LOOP para realizar las modificaciones correspondientes en single-command
+    OF 		= 18,
+    PROC 	= 19, 
+    RECORD      = 20, 
+    RECURSIVE   = 21, //
+    REPEAT      = 22, //Se agrega el token REPEAT para realizar las modificaciones correspondientes en single-command
+    SKIP        = 23, //Se agrega el token SKIP para reemplazar EOT en single-Command
+    THEN        = 24, 
+    TO          = 25, //Se agrega el token TO para realizar las modificaciones correspondientes en single-command
+    TYPE        = 26,
+    UNTIL       = 27, //Se agrega el token UNTIL para realizar las modificaciones correspondientes en single-command
+    VAR         = 28,
+    WHILE	= 29,
 
     // punctuation...
-    DOT			= 21,
-    COLON		= 22,
-    SEMICOLON	= 23,
-    COMMA		= 24,
-    BECOMES		= 25,
-    IS			= 26,
+    DOT			= 30,
+    COLON		= 31,
+    SEMICOLON	        = 32,
+    COMMA		= 33,
+    BECOMES		= 34,
+    IS			= 35,
 
     // brackets...
-    LPAREN		= 27,
-    RPAREN		= 28,
-    LBRACKET	= 29,
-    RBRACKET	= 30,
-    LCURLY		= 31,
-    RCURLY		= 32,
+    LPAREN		= 36,
+    RPAREN		= 37,
+    LBRACKET	        = 38,
+    RBRACKET	        = 39,
+    LCURLY		= 40,
+    RCURLY		= 41,
 
     // special tokens...
-    EOT			= 33,
-    ERROR		= 34;
+    EOT			= 42,
+    ERROR		= 43;
 
   private static String[] tokenTable = new String[] {
     "<int>",
     "<char>",
     "<identifier>",
     "<operator>",
+
+    "and", //
     "array",
-    "begin",
     "const",
     "do",
     "else",
     "end",
+    "for", // 
     "func",
     "if",
     "in",
+    "init", //
     "let",
+    "local", //
+    "loop", //
     "of",
     "proc",
     "record",
+    "recursive", //
+    "repeat", //
+    "skip", //
     "then",
+    "to", //
     "type",
+    "until", //
     "var",
     "while",
     ".",
@@ -141,9 +162,9 @@ final class Token extends Object {
     "}",
     "",
     "<error>"
+
   };
 
-  private final static int	firstReservedWord = Token.ARRAY,
+  private final static int	firstReservedWord = Token.AND,
   				lastReservedWord  = Token.WHILE;
-
 }

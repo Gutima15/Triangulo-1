@@ -17,7 +17,9 @@ package Triangle.AbstractSyntaxTrees;
 import Triangle.SyntacticAnalyzer.SourcePosition;
 
 public class WhileCommand extends Command {
-
+  public Expression E;
+  public Command C;
+  
   public WhileCommand (Expression eAST, Command cAST, SourcePosition thePosition) {
     super (thePosition);
     E = eAST;
@@ -28,6 +30,5 @@ public class WhileCommand extends Command {
     return v.visitWhileCommand(this, o);
   }
 
-  public Expression E;
-  public Command C;
+ 
 }
