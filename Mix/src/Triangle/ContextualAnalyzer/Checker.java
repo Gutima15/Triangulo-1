@@ -79,6 +79,7 @@ import Triangle.AbstractSyntaxTrees.TypeDeclaration;
 import Triangle.AbstractSyntaxTrees.TypeDenoter;
 import Triangle.AbstractSyntaxTrees.UnaryExpression;
 import Triangle.AbstractSyntaxTrees.UnaryOperatorDeclaration;
+import Triangle.AbstractSyntaxTrees.UntilCommand;
 import Triangle.AbstractSyntaxTrees.VarActualParameter;
 import Triangle.AbstractSyntaxTrees.VarDeclaration;
 import Triangle.AbstractSyntaxTrees.VarFormalParameter;
@@ -153,7 +154,13 @@ public final class Checker implements Visitor {
     ast.C.visit(this, null);
     return null;
   }
-
+  public Object visitUntilCommand(UntilCommand ast, Object o) {  // Se agrega el método visitUntilCommand donde
+    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null); /// Nos aseguramos que siempre reciba una expresión booleana
+    if (! eType.equals(StdEnvironment.booleanType)) //
+      reporter.reportError("Boolean expression expected here", "", ast.E.position); //
+    ast.C.visit(this, null); // 
+    return null;///
+  }
   // Expressions
 
   // Returns the TypeDenoter denoting the type of the expression. Does

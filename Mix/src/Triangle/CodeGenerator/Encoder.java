@@ -82,6 +82,7 @@ import Triangle.AbstractSyntaxTrees.SubscriptVname;
 import Triangle.AbstractSyntaxTrees.TypeDeclaration;
 import Triangle.AbstractSyntaxTrees.UnaryExpression;
 import Triangle.AbstractSyntaxTrees.UnaryOperatorDeclaration;
+import Triangle.AbstractSyntaxTrees.UntilCommand;
 import Triangle.AbstractSyntaxTrees.VarActualParameter;
 import Triangle.AbstractSyntaxTrees.VarDeclaration;
 import Triangle.AbstractSyntaxTrees.VarFormalParameter;
@@ -158,6 +159,18 @@ public final class Encoder implements Visitor {
     return null;
   }
 
+  public Object visitUntilCommand(UntilCommand ast, Object o) { //
+    Frame frame = (Frame) o;// 
+    int jumpAddr, loopAddr;//
+    jumpAddr = nextInstrAddr;//
+    emit(Machine.JUMPop, 0, Machine.CBr, 0);//
+    loopAddr = nextInstrAddr;//
+    ast.C.visit(this, frame);//
+    patch(jumpAddr, nextInstrAddr);//
+    ast.E.visit(this, frame);//
+    emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, loopAddr);//
+    return null;//
+  }
 
   // Expressions
   public Object visitArrayExpression(ArrayExpression ast, Object o) {

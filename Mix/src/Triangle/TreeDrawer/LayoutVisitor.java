@@ -74,6 +74,7 @@ import Triangle.AbstractSyntaxTrees.SubscriptVname;
 import Triangle.AbstractSyntaxTrees.TypeDeclaration;
 import Triangle.AbstractSyntaxTrees.UnaryExpression;
 import Triangle.AbstractSyntaxTrees.UnaryOperatorDeclaration;
+import Triangle.AbstractSyntaxTrees.UntilCommand;
 import Triangle.AbstractSyntaxTrees.VarActualParameter;
 import Triangle.AbstractSyntaxTrees.VarDeclaration;
 import Triangle.AbstractSyntaxTrees.VarFormalParameter;
@@ -162,7 +163,11 @@ public class LayoutVisitor implements Visitor {
   public Object visitUnaryExpression(UnaryExpression ast, Object obj) {
     return layoutBinary("UnaryExpr.", ast.O, ast.E);
   }
-
+  
+  public Object visitUntilCommand(UntilCommand ast, Object obj){ // ESTA SE AGREGA PARA LA PROGRA
+    return layoutBinary("UntilCom",ast.E, ast.C ); //
+  } //
+  
   public Object visitVnameExpression(VnameExpression ast, Object obj) {
     return layoutUnary("VnameExpr.", ast.V);
   }
