@@ -8,6 +8,7 @@ in
   getint (var num); ! Number of iterations. 
   i:= 1; 
   j:= 2; 
+  skip;
   putint(i); 
   put(' '); 
   k:= i+j; 
