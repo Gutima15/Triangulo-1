@@ -16,7 +16,6 @@ package Triangle.SyntacticAnalyzer;
 
 
 public final class Scanner {
-
   private SourceFile sourceFile;
   private boolean debug;
 
@@ -61,6 +60,7 @@ public final class Scanner {
     if (currentlyScanningToken)
       currentSpelling.append(currentChar);
     currentChar = sourceFile.getSource();
+    
   }
 
   // scanSeparator skips a single separator.
@@ -212,4 +212,6 @@ public final class Scanner {
     return tok;
   }
 
+  
+    
 }

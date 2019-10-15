@@ -88,7 +88,7 @@ public class Parser {
   private ErrorReporter errorReporter;
   private Token currentToken;
   private SourcePosition previousTokenPosition;
-
+  
   public Parser(Scanner lexer, ErrorReporter reporter) {
     lexicalAnalyser = lexer;
     errorReporter = reporter;
@@ -214,6 +214,7 @@ public class Parser {
       String spelling = currentToken.spelling;
       I = new Identifier(spelling, previousTokenPosition);
       currentToken = lexicalAnalyser.scan();
+      
     } else {
       I = null;
       syntacticError("identifier expected here", "");
@@ -269,7 +270,9 @@ public class Parser {
 
     SourcePosition commandPos = new SourcePosition();
     start(commandPos);
-
+    
+    System.out.println(currentToken.spelling+"222");//Saca elemento que va en negrita---------------
+    System.out.println();
     switch (currentToken.kind) {
 
     case Token.IDENTIFIER:
@@ -320,6 +323,8 @@ public class Parser {
         Command c2AST = parseSingleCommand();
         finish(commandPos);
         commandAST = new IfCommand(eAST, c1AST, c2AST, commandPos);
+        
+        
       }
       break;
 
@@ -958,4 +963,10 @@ public class Parser {
     }
     return fieldAST;
   }
+  
+ public void createHtml(char c){
+     
+     
+  } 
+  
 }
