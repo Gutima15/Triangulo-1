@@ -22,6 +22,4 @@ public class UntilCommand extends Command {
   public Object visit(Visitor v, Object o) {
     return v.visitUntilCommand(this, o);
   }
-
- 
 }

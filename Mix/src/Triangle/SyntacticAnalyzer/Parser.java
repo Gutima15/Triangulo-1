@@ -31,6 +31,8 @@ import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
 import Triangle.AbstractSyntaxTrees.Declaration;
+import Triangle.AbstractSyntaxTrees.DoUntilCommand;
+import Triangle.AbstractSyntaxTrees.DoWhileCommand;
 import Triangle.AbstractSyntaxTrees.DotVname;
 import Triangle.AbstractSyntaxTrees.EmptyActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.EmptyCommand;
@@ -104,7 +106,7 @@ public class Parser {
     if (currentToken.kind == tokenExpected) {
       previousTokenPosition = currentToken.position;
       currentToken = lexicalAnalyser.scan();
-      System.out.println(currentToken);
+      //System.out.println(currentToken);
     } else {
       syntacticError("\"%\" expected here", Token.spell(tokenExpected));
     }
@@ -293,27 +295,12 @@ public class Parser {
         }
       }
       break;
-      /*Debe modificar el analizador sintácticode manera que logre reconocer el lenguaje ?extendido completo y 
-      construya los árboles de sintaxis abstracta correspondientes a las estructuras de las frases reconocidas*/
-      /*Cada una de las variantes del comando loop debe dar lugar a una forma distinta de árbol de sintaxis abstracta.
-      Esto facilitará el análisis contextual y la generación de código en proyectos futuros.*/
-      
-      /*case Token.WHILE:
-      {
-        acceptIt();
-        Expression eAST = parseExpression();
-        accept(Token.DO);
-        Command cAST = parseSingleCommand();
-        finish(commandPos);
-        commandAST = new WhileCommand(eAST, cAST, commandPos);
-      }
-      break;
-    */
+
     case Token.LOOP: //
     {
         acceptIt(); //        
         switch (currentToken.kind){
-            case Token.WHILE: //
+            case Token.WHILE: //"loop" "while" Expression "do" Command "repeat"
             { //
                 acceptIt(); //
                 Expression eAST= parseExpression(); //
@@ -324,7 +311,7 @@ public class Parser {
                 commandAST = new WhileCommand(eAST, cAST, commandPos);             //
             }//
             break;// 
-            case Token.UNTIL://
+            case Token.UNTIL://|"loop" "until" Expression "do" Command "repeat"
             {//
                 acceptIt();//
                 Expression eAST= parseExpression();//
@@ -334,17 +321,48 @@ public class Parser {
                 finish(commandPos); //                                           
                 commandAST = new UntilCommand(eAST, cAST, commandPos); //
             }//
-            break;
-            case Token.FOR: //
+            break;//
+            case Token.FOR: //|"loop" "for" Identifier "~"Expression "to" Expression "do" Command "repeat"
             {//
+                acceptIt();//
+                Identifier iAST = parseIdentifier();
+                accept(Token.IS);
+                Expression eAST= parseExpression();
+                accept(Token.TO);
+                Expression eAST2= parseExpression();
+                accept(Token.DO);
+                 Command cAST = parseCommand();//
+                accept(Token.REPEAT);
+                finish(commandPos); //
+                //Command cAST = ForCommand(eAST,eAST2,cAST,commandPos);// Falta implementar
                 
             }
-            case Token.DO:    
+            break;    //
+            
+            case Token.DO:{ //
+                acceptIt();
+                Command cAST = parseCommand(); //
+                if ((currentToken.kind != Token.WHILE) && (currentToken.kind != Token.UNTIL)){//
+                    syntacticError("Found \"%\" 'Until'cor 'while' statement was expect.",currentToken.spelling);
+                break;//
+                }
+                acceptIt();//acepto el while o until//
+                boolean isUntil= Token.UNTIL==currentToken.kind;//
+                //System.out.println(isUntil);
+                Expression eAST= parseExpression();//
+                accept(Token.REPEAT);//
+                finish(commandPos); //
+                if (isUntil==true){//
+                    commandAST = new DoUntilCommand(eAST, cAST, commandPos); //|"loop" "do" Command "until" Expression "repeat"
+                }else{
+                    commandAST = new DoWhileCommand(eAST, cAST, commandPos); //|"loop" "do" Command "while" Expression "repeat"
+                }                //
+            }  //
+            break;//
         }
         //
     }
     break;
-//El caso del indentificardor de arriba se conserva como el original: Jorge
    
     case Token.LET:
       {
@@ -370,8 +388,18 @@ public class Parser {
         finish(commandPos);
         commandAST = new IfCommand(eAST, c1AST, c2AST, commandPos);
       }
+      break;          
+      /*case Token.WHILE:
+      {
+        acceptIt();
+        Expression eAST = parseExpression();
+        accept(Token.DO);
+        Command cAST = parseSingleCommand();
+        finish(commandPos);
+        commandAST = new WhileCommand(eAST, cAST, commandPos);
+      }
       break;
-    
+    */
     case Token.SKIP:
       {
         acceptIt();
@@ -383,10 +411,7 @@ public class Parser {
     case Token.END:
     case Token.ELSE:
     case Token.IN:
-    //case Token.EOT:
-    
-// Se reemplaza el comando de EOT ("") por la palabra "skip"
-
+    //case Token.EOT: // Se reemplaza el comando de EOT ("") por la palabra "skip"   
       finish(commandPos);
       commandAST = new EmptyCommand(commandPos);
       break;

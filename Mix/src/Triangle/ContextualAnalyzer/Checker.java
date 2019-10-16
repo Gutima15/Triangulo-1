@@ -32,6 +32,8 @@ import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
 import Triangle.AbstractSyntaxTrees.Declaration;
+import Triangle.AbstractSyntaxTrees.DoUntilCommand;
+import Triangle.AbstractSyntaxTrees.DoWhileCommand;
 import Triangle.AbstractSyntaxTrees.DotVname;
 import Triangle.AbstractSyntaxTrees.EmptyActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.EmptyCommand;
@@ -161,6 +163,23 @@ public final class Checker implements Visitor {
     ast.C.visit(this, null); // 
     return null;///
   }
+  
+  public Object visitDoUntilCommand(DoUntilCommand ast, Object o){ // Se agrega el método visitDoUntilCommand
+    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null); /// Nos aseguramos que siempre reciba una expresión booleana
+    if (! eType.equals(StdEnvironment.booleanType)) //
+      reporter.reportError("Boolean expression expected here", "", ast.E.position); //
+    ast.C.visit(this, null); // 
+    return null;///
+  }
+  
+  public Object visitDoWhileCommand(DoWhileCommand ast, Object o){ // Se agrega el método visitDoWhileCommand
+    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null); /// Nos aseguramos que siempre reciba una expresión booleana
+    if (! eType.equals(StdEnvironment.booleanType)) //
+      reporter.reportError("Boolean expression expected here", "", ast.E.position); //
+    ast.C.visit(this, null); // 
+    return null;///
+  }
+  
   // Expressions
 
   // Returns the TypeDenoter denoting the type of the expression. Does

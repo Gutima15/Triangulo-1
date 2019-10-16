@@ -32,6 +32,8 @@ import Triangle.AbstractSyntaxTrees.CharacterLiteral;
 import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
+import Triangle.AbstractSyntaxTrees.DoUntilCommand;
+import Triangle.AbstractSyntaxTrees.DoWhileCommand;
 import Triangle.AbstractSyntaxTrees.DotVname;
 import Triangle.AbstractSyntaxTrees.EmptyActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.EmptyCommand;
@@ -121,8 +123,15 @@ public class LayoutVisitor implements Visitor {
   public Object visitWhileCommand(WhileCommand ast, Object obj) {
     return layoutBinary("WhileCom.", ast.E, ast.C);
   }
-
-
+  
+  public Object visitDoUntilCommand(DoUntilCommand ast, Object obj){ // Se agrega el visit del comando DoUntil
+    return layoutBinary("DoUntilCom.", ast.E, ast.C);                // 
+  }
+  
+  public Object visitDoWhileCommand(DoWhileCommand ast, Object obj){ // Se agrega el visit del comando DoWhile
+    return layoutBinary("DoWhileCom.", ast.E, ast.C);                //
+  }
+ 
   // Expressions
   public Object visitArrayExpression(ArrayExpression ast, Object obj) {
     return layoutUnary("ArrayExpr.", ast.AA);
@@ -164,7 +173,7 @@ public class LayoutVisitor implements Visitor {
     return layoutBinary("UnaryExpr.", ast.O, ast.E);
   }
   
-  public Object visitUntilCommand(UntilCommand ast, Object obj){ // ESTA SE AGREGA PARA LA PROGRA
+  public Object visitUntilCommand(UntilCommand ast, Object obj){ //Se agrega el visit del Until Command
     return layoutBinary("UntilCom",ast.E, ast.C ); //
   } //
   

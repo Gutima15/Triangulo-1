@@ -10,13 +10,7 @@ in
   skip;
   putint(i); 
   put(' '); 
-  k:= i+j; 
-  i:= j; 
+  k:= i+j;  
   num:= num - 1; 
-  loop
-   until j>3 
-   do
-    putint(j);
-    j:=j+1
-  repeat
+  loop do putint(i);i:=i+1 until i>3 repeat
 end

@@ -20,6 +20,8 @@ import Triangle.AbstractSyntaxTrees.CharacterLiteral;
 import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
+import Triangle.AbstractSyntaxTrees.DoUntilCommand;
+import Triangle.AbstractSyntaxTrees.DoWhileCommand;
 import Triangle.AbstractSyntaxTrees.DotVname;
 import Triangle.AbstractSyntaxTrees.EmptyActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.EmptyCommand;
@@ -137,12 +139,21 @@ public class TableVisitor implements Visitor {
   
   public Object visitWhileCommand(WhileCommand ast, Object o) { 
       ast.E.visit(this, null);
-      ast.C.visit(this, null);
-      
+      ast.C.visit(this, null);      
       return(null);
   }
   
   public Object visitUntilCommand(UntilCommand ast, Object o) {  // Se agrega UNTIL
+      ast.E.visit(this, null); //
+      ast.C.visit(this, null); //   
+      return(null);//
+  }
+  public Object visitDoWhileCommand(DoWhileCommand ast, Object o) {  // Se agrega DoWhile
+      ast.E.visit(this, null); //
+      ast.C.visit(this, null); //   
+      return(null);//
+  }
+  public Object visitDoUntilCommand(DoUntilCommand ast, Object o) {  // Se agrega DoUntil
       ast.E.visit(this, null); //
       ast.C.visit(this, null); //   
       return(null);//
