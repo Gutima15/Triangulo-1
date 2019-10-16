@@ -62,6 +62,7 @@ import Triangle.AbstractSyntaxTrees.SubscriptVname;
 import Triangle.AbstractSyntaxTrees.TypeDeclaration;
 import Triangle.AbstractSyntaxTrees.UnaryExpression;
 import Triangle.AbstractSyntaxTrees.UnaryOperatorDeclaration;
+import Triangle.AbstractSyntaxTrees.UntilCommand;
 import Triangle.AbstractSyntaxTrees.VarActualParameter;
 import Triangle.AbstractSyntaxTrees.VarDeclaration;
 import Triangle.AbstractSyntaxTrees.VarFormalParameter;
@@ -139,6 +140,12 @@ public class TableVisitor implements Visitor {
       ast.C.visit(this, null);
       
       return(null);
+  }
+  
+  public Object visitUntilCommand(UntilCommand ast, Object o) {  // Se agrega UNTIL
+      ast.E.visit(this, null); //
+      ast.C.visit(this, null); //   
+      return(null);//
   }
   // </editor-fold>
 

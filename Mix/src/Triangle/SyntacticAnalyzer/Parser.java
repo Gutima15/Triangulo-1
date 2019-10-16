@@ -75,6 +75,7 @@ import Triangle.AbstractSyntaxTrees.SubscriptVname;
 import Triangle.AbstractSyntaxTrees.TypeDeclaration;
 import Triangle.AbstractSyntaxTrees.TypeDenoter;
 import Triangle.AbstractSyntaxTrees.UnaryExpression;
+import Triangle.AbstractSyntaxTrees.UntilCommand;
 import Triangle.AbstractSyntaxTrees.VarActualParameter;
 import Triangle.AbstractSyntaxTrees.VarDeclaration;
 import Triangle.AbstractSyntaxTrees.VarFormalParameter;
@@ -103,6 +104,7 @@ public class Parser {
     if (currentToken.kind == tokenExpected) {
       previousTokenPosition = currentToken.position;
       currentToken = lexicalAnalyser.scan();
+      System.out.println(currentToken);
     } else {
       syntacticError("\"%\" expected here", Token.spell(tokenExpected));
     }
@@ -273,7 +275,7 @@ public class Parser {
         
     case Token.IDENTIFIER:
       {
-        Identifier iAST = parseIdentifier();
+        Identifier iAST = parseIdentifier(); // |Identifier "(" Actual-Parameter-Sequence ")"
         if (currentToken.kind == Token.LPAREN) {
           acceptIt();
           ActualParameterSequence apsAST = parseActualParameterSequence();
@@ -281,7 +283,7 @@ public class Parser {
           finish(commandPos);
           commandAST = new CallCommand(iAST, apsAST, commandPos);
 
-        } else {
+        } else { //|V-name ":=" Expression
 
           Vname vAST = parseRestOfVname(iAST);
           accept(Token.BECOMES);
@@ -291,35 +293,59 @@ public class Parser {
         }
       }
       break;
-    case Token.LOOP:
-    {
+      /*Debe modificar el analizador sintácticode manera que logre reconocer el lenguaje ?extendido completo y 
+      construya los árboles de sintaxis abstracta correspondientes a las estructuras de las frases reconocidas*/
+      /*Cada una de las variantes del comando loop debe dar lugar a una forma distinta de árbol de sintaxis abstracta.
+      Esto facilitará el análisis contextual y la generación de código en proyectos futuros.*/
+      
+      /*case Token.WHILE:
+      {
         acceptIt();
-        //commandAST = parseCommand();
+        Expression eAST = parseExpression();
+        accept(Token.DO);
+        Command cAST = parseSingleCommand();
+        finish(commandPos);
+        commandAST = new WhileCommand(eAST, cAST, commandPos);
+      }
+      break;
+    */
+    case Token.LOOP: //
+    {
+        acceptIt(); //        
         switch (currentToken.kind){
-            case Token.WHILE:
-            {
-                
-            }
-            case Token.UNTIL:
-            {
-                
-            }
-            case Token.FOR:
-            {
+            case Token.WHILE: //
+            { //
+                acceptIt(); //
+                Expression eAST= parseExpression(); //
+                accept(Token.DO); //
+                Command cAST = parseCommand();// 
+                accept(Token.REPEAT);// 
+                finish(commandPos);// 
+                commandAST = new WhileCommand(eAST, cAST, commandPos);             //
+            }//
+            break;// 
+            case Token.UNTIL://
+            {//
+                acceptIt();//
+                Expression eAST= parseExpression();//
+                accept(Token.DO);//
+                Command cAST = parseCommand();//
+                accept(Token.REPEAT); //
+                finish(commandPos); //                                           
+                commandAST = new UntilCommand(eAST, cAST, commandPos); //
+            }//
+            break;
+            case Token.FOR: //
+            {//
                 
             }
             case Token.DO:    
         }
         //
     }
+    break;
 //El caso del indentificardor de arriba se conserva como el original: Jorge
-    /*case Token.BEGIN:
-      acceptIt();
-      commandAST = parseCommand();
-      accept(Token.END);
-      break;
-    */  
-    
+   
     case Token.LET:
       {
         acceptIt();
@@ -346,18 +372,6 @@ public class Parser {
       }
       break;
     
-      
-    /*case Token.WHILE:
-      {
-        acceptIt();
-        Expression eAST = parseExpression();
-        accept(Token.DO);
-        Command cAST = parseSingleCommand();
-        finish(commandPos);
-        commandAST = new WhileCommand(eAST, cAST, commandPos);
-      }
-      break;
-    */
     case Token.SKIP:
       {
         acceptIt();

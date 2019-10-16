@@ -37,7 +37,7 @@ final class Token extends Object {
           searching = false;
         } else {
           currentKind ++;
-            System.out.println(tokenTable[currentKind] + " spell: "+spelling);
+           // System.out.println(tokenTable[currentKind] + " spell: "+spelling);
         }
       }
     } else
