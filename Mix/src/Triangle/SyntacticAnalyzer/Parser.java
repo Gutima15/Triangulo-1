@@ -93,6 +93,7 @@ public class Parser {
     lexicalAnalyser = lexer;
     errorReporter = reporter;
     previousTokenPosition = new SourcePosition();
+    
   }
 
 // accept checks whether the current token matches tokenExpected.
@@ -104,7 +105,7 @@ public class Parser {
       previousTokenPosition = currentToken.position;
       currentToken = lexicalAnalyser.scan();
     } else {
-      syntacticError("\"%\" expected here", Token.spell(tokenExpected));
+      syntacticError("\"%\" expected here", Token.spell(tokenExpected));//Revisar
     }
   }
 
