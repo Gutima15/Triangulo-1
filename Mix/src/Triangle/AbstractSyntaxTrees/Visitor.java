@@ -28,7 +28,7 @@ public interface Visitor {
   public abstract Object visitUntilCommand (UntilCommand  ast, Object o);//
   public abstract Object visitDoUntilCommand (DoUntilCommand  ast, Object o);//
   public abstract Object visitDoWhileCommand (DoWhileCommand  ast, Object o);//
-  //public abstract Object visitForCommand (ForCommand  ast, Object o);//
+  public abstract Object visitForCommand (ForCommand  ast, Object o);//
   
   // Expressions
   public abstract Object visitArrayExpression(ArrayExpression ast, Object o);
