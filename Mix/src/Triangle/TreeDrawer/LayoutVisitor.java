@@ -40,6 +40,7 @@ import Triangle.AbstractSyntaxTrees.EmptyCommand;
 import Triangle.AbstractSyntaxTrees.EmptyExpression;
 import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.ErrorTypeDenoter;
+import Triangle.AbstractSyntaxTrees.ForCommand;
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
 import Triangle.AbstractSyntaxTrees.FuncDeclaration;
 import Triangle.AbstractSyntaxTrees.FuncFormalParameter;
@@ -111,7 +112,11 @@ public class LayoutVisitor implements Visitor {
   public Object visitIfCommand(IfCommand ast, Object obj) {
     return layoutTernary("IfCom.", ast.E, ast.C1, ast.C2);
   }
-
+  
+  public Object visitForCommand(ForCommand ast, Object obj) {
+    return layoutQuaternary("ForCom.", ast.I1, ast.E1, ast.E2,ast.C1);
+  }
+  
   public Object visitLetCommand(LetCommand ast, Object obj) {
     return layoutBinary("LetCom.", ast.D, ast.C);
   }

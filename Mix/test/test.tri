@@ -1,7 +1,8 @@
 let 
    var i: Integer; 
    var j: Integer; 
-   var k: Integer; 
+   var k: Integer;
+   var w: Integer;
    var num: Integer 
 in 
   getint (var num); ! Number of iterations. 
@@ -12,5 +13,5 @@ in
   put(' '); 
   k:= i+j;  
   num:= num - 1; 
-  loop do putint(i);i:=i+1 until i>3 repeat
+  loop for hola ~ w<5 to w=5 do skip repeat
 end

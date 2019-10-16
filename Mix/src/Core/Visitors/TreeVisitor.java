@@ -17,6 +17,7 @@ import Triangle.AbstractSyntaxTrees.CallExpression;
 import Triangle.AbstractSyntaxTrees.CharTypeDenoter;
 import Triangle.AbstractSyntaxTrees.CharacterExpression;
 import Triangle.AbstractSyntaxTrees.CharacterLiteral;
+import Triangle.AbstractSyntaxTrees.Command;
 import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
@@ -28,6 +29,8 @@ import Triangle.AbstractSyntaxTrees.EmptyCommand;
 import Triangle.AbstractSyntaxTrees.EmptyExpression;
 import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.ErrorTypeDenoter;
+import Triangle.AbstractSyntaxTrees.Expression;
+import Triangle.AbstractSyntaxTrees.ForCommand;
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
 import Triangle.AbstractSyntaxTrees.FuncDeclaration;
 import Triangle.AbstractSyntaxTrees.FuncFormalParameter;
@@ -105,6 +108,10 @@ public class TreeVisitor implements Visitor {
     
     public Object visitIfCommand(IfCommand ast, Object obj) {
         return(createTernary("If Command", ast.E, ast.C1, ast.C2));
+    }
+    
+    public Object visitForCommand(ForCommand ast, Object obj) {              // Se añade el visit al nuevo comando for
+        return(createQuaternary("For Command", ast.I1, ast.E1, ast.E2, ast.C1));
     }
     
     public Object visitLetCommand(LetCommand ast, Object obj) {
@@ -429,7 +436,6 @@ public class TreeVisitor implements Visitor {
         
         return(t);        
     }
-    
     /**
      * Creates a quaternary tree node.
      * @param caption The tree's caption (text to be shown when the tree is drawn).
@@ -449,4 +455,6 @@ public class TreeVisitor implements Visitor {
         return(t);             
     }
     // </editor-fold>
+
+    
 }
