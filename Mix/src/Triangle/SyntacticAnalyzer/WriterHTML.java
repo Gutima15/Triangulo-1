@@ -25,6 +25,7 @@ public class WriterHTML {
 		this.fileName = fileName;
 		dataQueue = new LinkedList<>();
 		lastTag = "";
+                System.out.println(fileName+"siii");
 		writeHeader();
 	}
         

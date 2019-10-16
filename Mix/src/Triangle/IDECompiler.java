@@ -47,6 +47,7 @@ public class IDECompiler {
         System.out.println("Syntactic Analysis ...");
         SourceFile source = new SourceFile(sourceName);
         Scanner scanner = new Scanner(source);
+        scanner.enableWriting(sourceName.replace(".tri", ".html")); //---
         report = new IDEReporter();
         Parser parser = new Parser(scanner, report);
         boolean success = false;
@@ -68,9 +69,11 @@ public class IDECompiler {
             }
         }
 
-        if (success)
+        if (success){
             System.out.println("Compilation was successful.");
-        else
+            System.out.println("Generating html file...");
+            scanner.finishWriting();
+        }else
             System.out.println("Compilation was unsuccessful.");
         
         return(success);

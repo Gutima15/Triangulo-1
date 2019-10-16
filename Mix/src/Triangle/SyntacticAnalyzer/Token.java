@@ -146,7 +146,7 @@ final class Token extends Object {
   private final static int	firstReservedWord = Token.ARRAY,
   				lastReservedWord  = Token.WHILE;
 
-  
+  //---
   public static int getLastReservedWord(){
     return lastReservedWord;
   }
