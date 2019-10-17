@@ -271,9 +271,6 @@ public class Parser {
 
     SourcePosition commandPos = new SourcePosition();
     start(commandPos);
-    
-    System.out.println(currentToken.spelling+"222");//Saca elemento que va en negrita---------------
-    System.out.println();
     switch (currentToken.kind) {
 
     case Token.IDENTIFIER:

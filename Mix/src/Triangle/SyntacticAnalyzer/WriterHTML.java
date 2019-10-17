@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Triangle.SyntacticAnalyzer;
 
 import java.io.FileWriter;
@@ -11,108 +6,102 @@ import java.util.LinkedList;
 import java.util.Queue;
         
 public class WriterHTML {
-    private String fileName;
-	private Queue<String> dataQueue;
-	private String lastTag;
-	private String CSS_CODE = "<style>" +
-					"div.code{ font-family : \"Courier New\", \"Lucida Console\"; font-size : 1em;}\n" +
-					"resword{font-weight: bold; }\n" +
-					"literal{color: #11A8FF;}\n" +
-					"comment{color: #00A310;}" +
-					"</style>";
-
+    private String fileName;//Nombre archivo
+    private Queue<String> queue;//Cola de tipo string, se ingresa el html
+    private String endTag;//Cierre de etiqueta
+    private String estilo = 
+        "<style>" +
+	"div.code{ font-family : \"Courier New\", \"Arial\"; font-size : 1em;}\n" +
+        "reservedword{font-weight: bold; }\n" +
+	"literal{color: #013ba5;}\n" +
+        "comment{color: #53a501;}" +
+	"</style>";//Se presenta el estilo que contiene el html, así los colores de las asignaciones solicitadas
+        
+        //Inicialización del html con el nombre del archivo
 	public WriterHTML(String fileName) {
-		this.fileName = fileName;
-		dataQueue = new LinkedList<>();
-		lastTag = "";
-                System.out.println(fileName+"siii");
-		writeHeader();
+            this.fileName = fileName;
+            queue = new LinkedList<>();
+            endTag = "";
+            writeHeader();
 	}
         
+        //Header del html, cada parte de la estructura se agrega a la cola
         private void writeHeader(){
-		this.dataQueue.add("<!DOCTYPE html> <html>");
-		this.dataQueue.add("<head>\n");
-		this.dataQueue.add(CSS_CODE);
-		this.dataQueue.add("</head>");
-		this.dataQueue.add("<body>");
-		this.dataQueue.add("<div class= \"code\">");
+            this.queue.add("<!DOCTYPE html> <html>");
+            this.queue.add("<head>\n");
+            this.queue.add("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">");
+            this.queue.add(estilo);
+            this.queue.add("</head>");
+            this.queue.add("<body>");
+            this.queue.add("<div class= \"code\">");
 	}
-
-	public void closeTag(String pTag){
-		this.dataQueue.add( String.format("</%s>", pTag) );
+        //Genera el cierre de las etiquetas
+	public void EndTag(String tag){
+		this.queue.add( String.format("</%s>", tag) );
 	}
-
-	public void writeSeparator(char pSeparator) {
-		String rawText;
-		switch (pSeparator){
-			case '\n':
-				rawText = "<br>";
-				break;
-			case '\t':
-				rawText = "<span class=\"mtk1\">&nbsp;&nbsp;</span>";
-				break;
-			case '!':
-				rawText = "<comment>!";
-				break;
-			case ' ':
-				rawText = "&nbsp;";
-				break;
-			default:
-				rawText = Character.toString(pSeparator);
+        
+        //Asigna su correspondiente en html según como termina la palabra
+	public void writeSeparator(char caracter) {
+		String separator;
+		switch (caracter){
+                    case '!':
+			separator = "<comment>!";
+			break;
+                    case '\n':
+			separator = "<br>";
+			break;
+                    case ' ':
+			separator = "&nbsp;";
+			break;
+                    case '\t':
+			separator = "<span class=\"mtk1\">&nbsp;&nbsp;</span>";
+			break;
+                    default:
+			separator = Character.toString(caracter);
 		}
-		this.dataQueue.add(rawText);
+		this.queue.add(separator);
 	}
-
-	public void write(String pText, int pKind) {
-		String tag;
-
-		if (!lastTag.equals(""))
-			closeTag(lastTag);
-
-		switch(pKind){
-			case Token.IDENTIFIER:
-			{
-				tag = "identifier";
-			}
-			break;
-
-			case Token.CHARLITERAL:
-			case Token.INTLITERAL:
-			{
-				tag = "literal";
-			}
-			break;
-
-			default:
-				if (pKind < Token.getLastReservedWord())
-					tag = "resword";//String.format("<common> %s </common>", pText);
-				else
-					tag = "identifier";
+        
+        //Escribe el html 
+	public void write(String entry, int type) {
+		String tag;//Etiqueta
+		if (!endTag.equals(""))//Si no hay más palabras, termina el html
+			EndTag(endTag);
+                //Asigna si es un identificador, literal,comentario o otra palabra según su formato
+		switch(type){
+                    case Token.CHARLITERAL:
+                    case Token.IDENTIFIER:{
+			tag = "identifier";
+                    }
+                    break;	
+                    case Token.INTLITERAL:{
+			tag = "literal";
+                    }
+                    break;
+                    default:
+			if (type < Token.getLastReservedWord())//Verificar si es una palabra reservada
+                            tag = "reservedword";
+			else
+                            tag = "identifier";
 		}
 
-		this.dataQueue.add(String.format("<%s>%s</%s>", tag, pText, tag));
-		lastTag = tag;
+		this.queue.add(String.format("<%s>%s</%s>", tag, entry, tag));
+		endTag = tag;
 	}
-
+        // Prepara el archivo para escribir y guardar
 	public boolean save(){
-		// Prepare the file to write
-
-		this.dataQueue.add("</div>");
-		this.dataQueue.add("</body>");
-		this.dataQueue.add("</<html>");
-
+                //Etiquetas de cierre
+		this.queue.add("</div>");
+		this.queue.add("</body>");
+		this.queue.add("</<html>");
 		try {
-			FileWriter fileWriter = new FileWriter(fileName);
-
-			while (!this.dataQueue.isEmpty())
-			//HTML header
-				fileWriter.write(this.dataQueue.remove());
-
+                    FileWriter fileWriter = new FileWriter(fileName);
+                    while (!this.queue.isEmpty())//Lo hace si la cola no esté vacía
+			fileWriter.write(this.queue.remove());
 			fileWriter.close();
-
 		} catch (IOException e) {
-			System.err.println("Error while creating file for print the AST");
-			e.printStackTrace();
+                    System.err.println("Error while creating file for print the AST");
+                    e.printStackTrace();
 		}
 		return true;
 	}

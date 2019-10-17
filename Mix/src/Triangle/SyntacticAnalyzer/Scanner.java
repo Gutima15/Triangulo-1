@@ -87,7 +87,7 @@ public final class Scanner {
         takeIt();
         while ((currentChar != SourceFile.EOL) && (currentChar != SourceFile.EOT))
           takeIt();
-        writer.closeTag("comment");//cambio
+        writer.EndTag("comment");//Escribo que es un comentario en html cuando es !
         if (currentChar == SourceFile.EOL)
           takeIt();
       }
