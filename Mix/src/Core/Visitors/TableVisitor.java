@@ -20,12 +20,15 @@ import Triangle.AbstractSyntaxTrees.CharacterLiteral;
 import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
+import Triangle.AbstractSyntaxTrees.DoUntilCommand;
+import Triangle.AbstractSyntaxTrees.DoWhileCommand;
 import Triangle.AbstractSyntaxTrees.DotVname;
 import Triangle.AbstractSyntaxTrees.EmptyActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.EmptyCommand;
 import Triangle.AbstractSyntaxTrees.EmptyExpression;
 import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.ErrorTypeDenoter;
+import Triangle.AbstractSyntaxTrees.ForCommand;
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
 import Triangle.AbstractSyntaxTrees.FuncDeclaration;
 import Triangle.AbstractSyntaxTrees.FuncFormalParameter;
@@ -62,6 +65,7 @@ import Triangle.AbstractSyntaxTrees.SubscriptVname;
 import Triangle.AbstractSyntaxTrees.TypeDeclaration;
 import Triangle.AbstractSyntaxTrees.UnaryExpression;
 import Triangle.AbstractSyntaxTrees.UnaryOperatorDeclaration;
+import Triangle.AbstractSyntaxTrees.UntilCommand;
 import Triangle.AbstractSyntaxTrees.VarActualParameter;
 import Triangle.AbstractSyntaxTrees.VarDeclaration;
 import Triangle.AbstractSyntaxTrees.VarFormalParameter;
@@ -84,7 +88,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * Generates a DefaultTableModel, used to draw a Jable.
  *
- * @author Luis Leopoldo  <luiperpe@ns.isi.ulatina.ac.cr>
+ * @author Luis Leopoldo Pérez <luiperpe@ns.isi.ulatina.ac.cr>
  */
 public class TableVisitor implements Visitor {
     
@@ -119,6 +123,13 @@ public class TableVisitor implements Visitor {
       
       return(null);
   }
+  public Object visitForCommand(ForCommand ast, Object o) { //Se agrega nuevo para el comando for
+      ast.I1.visit(this, null);
+      ast.E1.visit(this, null);
+      ast.E2.visit(this, null);
+      ast.C1.visit(this, null);
+      return(null);
+  }
   
   public Object visitLetCommand(LetCommand ast, Object o) {     
       ast.D.visit(this, null);
@@ -136,9 +147,24 @@ public class TableVisitor implements Visitor {
   
   public Object visitWhileCommand(WhileCommand ast, Object o) { 
       ast.E.visit(this, null);
-      ast.C.visit(this, null);
-      
+      ast.C.visit(this, null);      
       return(null);
+  }
+  
+  public Object visitUntilCommand(UntilCommand ast, Object o) {  // Se agrega UNTIL
+      ast.E.visit(this, null); //
+      ast.C.visit(this, null); //   
+      return(null);//
+  }
+  public Object visitDoWhileCommand(DoWhileCommand ast, Object o) {  // Se agrega DoWhile
+      ast.E.visit(this, null); //
+      ast.C.visit(this, null); //   
+      return(null);//
+  }
+  public Object visitDoUntilCommand(DoUntilCommand ast, Object o) {  // Se agrega DoUntil
+      ast.E.visit(this, null); //
+      ast.C.visit(this, null); //   
+      return(null);//
   }
   // </editor-fold>
 

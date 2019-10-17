@@ -18,12 +18,12 @@ package Triangle.SyntacticAnalyzer;
 public final class Scanner {
   private SourceFile sourceFile;
   private boolean debug;
-  private WriterHTML writer;//----
+  private WriterHTML writer;//Se genera un objeto tipo WriterHTML
 
   private char currentChar;
   private StringBuffer currentSpelling;
   private boolean currentlyScanningToken;
-  private boolean writing;//----
+  private boolean writing;//boolean para verificar estado
 
   private boolean isLetter(char c) {
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
@@ -49,18 +49,20 @@ public final class Scanner {
     sourceFile = source;
     currentChar = sourceFile.getSource();
     debug = false;
-    this.writing=false;
+    this.writing=false;//Estado para iniciar, aun no se está creando el html
   }
 
   public void enableDebugging() {
     debug = true;
   }
-//-----
+  
+  //Habilita si se puede escribir el html
   public void enableWriting(String pFilename){
     this.writing = true;
     writer = new WriterHTML(pFilename);
   }
-//-----
+  
+  //Verifica si se termino de escribir el html y lo guarda
   public void finishWriting(){
     this.writing = false;
     writer.save();
@@ -72,8 +74,8 @@ public final class Scanner {
   private void takeIt() {
     if (currentlyScanningToken)
       currentSpelling.append(currentChar);
-    else if(this.writing)//----
-        writer.writeSeparator(currentChar);//-----
+    else if(this.writing)//Si el estado está en true
+        writer.writeSeparator(currentChar);//agrega el separador de palabra en html
     currentChar = sourceFile.getSource();
     
   }

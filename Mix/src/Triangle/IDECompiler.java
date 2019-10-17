@@ -21,7 +21,7 @@ import Triangle.CodeGenerator.Encoder;
  * to get to the ASTs in order to draw them in the IDE without modifying the
  * original Triangle code.
  *
- * @author Luis Leopoldo  <luiperpe@ns.isi.ulatina.ac.cr>
+ * @author Luis Leopoldo Pérez <luiperpe@ns.isi.ulatina.ac.cr>
  */
 public class IDECompiler {
 
@@ -47,33 +47,30 @@ public class IDECompiler {
         System.out.println("Syntactic Analysis ...");
         SourceFile source = new SourceFile(sourceName);
         Scanner scanner = new Scanner(source);
-        scanner.enableWriting(sourceName.replace(".tri", ".html")); //---
         report = new IDEReporter();
         Parser parser = new Parser(scanner, report);
         boolean success = false;
         
         rootAST = parser.parseProgram();
         if (report.numErrors == 0) {
-            System.out.println("Contextual Analysis ...");
-            Checker checker = new Checker(report);
-            checker.check(rootAST);
+            //System.out.println("Contextual Analysis ...");//Comentar para que funcione el sintáctico solo
+            //Checker checker = new Checker(report);        //Comentar para que funcione el sintáctico solo
+            //checker.check(rootAST);                       //Comentar para que funcione el sintáctico solo
             if (report.numErrors == 0) {
-                System.out.println("Code Generation ...");
-                Encoder encoder = new Encoder(report);
-                encoder.encodeRun(rootAST, false);
+              //  System.out.println("Code Generation ...");//Comentar para que funcione el sintáctico solo
+//                Encoder encoder = new Encoder(report);    //Comentar para que funcione el sintáctico solo
+  //              encoder.encodeRun(rootAST, false);        //Comentar para que funcione el sintáctico solo
                 
                 if (report.numErrors == 0) {
-                    encoder.saveObjectProgram(sourceName.replace(".tri", ".tam"));
+    //                encoder.saveObjectProgram(sourceName.replace(".tri", ".tam"));//Comentar para que funcione el sintáctico solo
                     success = true;
                 }
             }
         }
 
-        if (success){
+        if (success)
             System.out.println("Compilation was successful.");
-            System.out.println("Generating html file...");
-            scanner.finishWriting();
-        }else
+        else
             System.out.println("Compilation was unsuccessful.");
         
         return(success);

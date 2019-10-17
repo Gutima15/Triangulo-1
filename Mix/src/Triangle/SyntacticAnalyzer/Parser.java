@@ -962,9 +962,4 @@ public class Parser {
     return fieldAST;
   }
   
- public void createHtml(char c){
-     
-     
-  } 
-  
 }

@@ -17,15 +17,20 @@ import Triangle.AbstractSyntaxTrees.CallExpression;
 import Triangle.AbstractSyntaxTrees.CharTypeDenoter;
 import Triangle.AbstractSyntaxTrees.CharacterExpression;
 import Triangle.AbstractSyntaxTrees.CharacterLiteral;
+import Triangle.AbstractSyntaxTrees.Command;
 import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
+import Triangle.AbstractSyntaxTrees.DoUntilCommand;
+import Triangle.AbstractSyntaxTrees.DoWhileCommand;
 import Triangle.AbstractSyntaxTrees.DotVname;
 import Triangle.AbstractSyntaxTrees.EmptyActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.EmptyCommand;
 import Triangle.AbstractSyntaxTrees.EmptyExpression;
 import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.ErrorTypeDenoter;
+import Triangle.AbstractSyntaxTrees.Expression;
+import Triangle.AbstractSyntaxTrees.ForCommand;
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
 import Triangle.AbstractSyntaxTrees.FuncDeclaration;
 import Triangle.AbstractSyntaxTrees.FuncFormalParameter;
@@ -62,6 +67,7 @@ import Triangle.AbstractSyntaxTrees.SubscriptVname;
 import Triangle.AbstractSyntaxTrees.TypeDeclaration;
 import Triangle.AbstractSyntaxTrees.UnaryExpression;
 import Triangle.AbstractSyntaxTrees.UnaryOperatorDeclaration;
+import Triangle.AbstractSyntaxTrees.UntilCommand;
 import Triangle.AbstractSyntaxTrees.VarActualParameter;
 import Triangle.AbstractSyntaxTrees.VarDeclaration;
 import Triangle.AbstractSyntaxTrees.VarFormalParameter;
@@ -76,7 +82,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
  *
  * Generates DefaultMutableTreeNodes, used to draw a JTree.
  *
- * @author Luis Leopoldo  <luiperpe@ns.isi.ulatina.ac.cr>
+ * @author Luis Leopoldo Pérez <luiperpe@ns.isi.ulatina.ac.cr>
  */
 public class TreeVisitor implements Visitor {
       
@@ -104,6 +110,10 @@ public class TreeVisitor implements Visitor {
         return(createTernary("If Command", ast.E, ast.C1, ast.C2));
     }
     
+    public Object visitForCommand(ForCommand ast, Object obj) {              // Se añade el visit al nuevo comando for
+        return(createQuaternary("For Command", ast.I1, ast.E1, ast.E2, ast.C1));
+    }
+    
     public Object visitLetCommand(LetCommand ast, Object obj) {
         return(createBinary("Let Command", ast.D, ast.C));
     }
@@ -114,6 +124,15 @@ public class TreeVisitor implements Visitor {
     
     public Object visitWhileCommand(WhileCommand ast, Object obj) {
         return(createBinary("While Command", ast.E, ast.C));
+    }
+    public Object visitUntilCommand(UntilCommand ast, Object obj) { // Nuevo comando Until
+        return(createBinary("Until Command", ast.E, ast.C)); //
+    }
+    public Object visitDoWhileCommand(DoWhileCommand ast, Object obj) { // Nuevo comando DoWhile
+        return(createBinary("DoWhile Command", ast.E, ast.C)); //
+    }
+    public Object visitDoUntilCommand(DoUntilCommand ast, Object obj) { // Nuevo comando DoUntil
+        return(createBinary("DoUntil Command", ast.E, ast.C)); //
     }
     // </editor-fold>
     
@@ -417,7 +436,6 @@ public class TreeVisitor implements Visitor {
         
         return(t);        
     }
-    
     /**
      * Creates a quaternary tree node.
      * @param caption The tree's caption (text to be shown when the tree is drawn).
@@ -437,4 +455,6 @@ public class TreeVisitor implements Visitor {
         return(t);             
     }
     // </editor-fold>
+
+    
 }

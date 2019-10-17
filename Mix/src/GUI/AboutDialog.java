@@ -14,7 +14,7 @@ import java.awt.Color;
 /**
  * About Dialog.
  *
- * @author Luis Leopoldo  <luiperpe@ns.isi.ulatina.ac.cr>
+ * @author Luis Leopoldo Pérez <luiperpe@ns.isi.ulatina.ac.cr>
  */
 public class AboutDialog extends javax.swing.JDialog {
     
