@@ -92,11 +92,12 @@ public class Parser {
   private ErrorReporter errorReporter;
   private Token currentToken;
   private SourcePosition previousTokenPosition;
-
+  
   public Parser(Scanner lexer, ErrorReporter reporter) {
     lexicalAnalyser = lexer;
     errorReporter = reporter;
     previousTokenPosition = new SourcePosition();
+    
   }
 
 // accept checks whether the current token matches tokenExpected.
@@ -109,7 +110,7 @@ public class Parser {
       currentToken = lexicalAnalyser.scan();
       //System.out.println(currentToken);
     } else {
-      syntacticError("\"%\" expected here", Token.spell(tokenExpected));
+      syntacticError("\"%\" expected here", Token.spell(tokenExpected));//Revisar
     }
   }
 
@@ -219,6 +220,7 @@ public class Parser {
       String spelling = currentToken.spelling;
       I = new Identifier(spelling, previousTokenPosition);
       currentToken = lexicalAnalyser.scan();
+      
     } else {
       I = null;
       syntacticError("identifier expected here", "");
@@ -273,7 +275,9 @@ public class Parser {
     Command commandAST = null; // in case there's a syntactic error
 
     SourcePosition commandPos = new SourcePosition();
+
     start(commandPos);  
+
     switch (currentToken.kind) {
         
     case Token.IDENTIFIER:
@@ -388,6 +392,8 @@ public class Parser {
         accept(Token.END); //Se agrega la frase END al final para que sea aceptado el comando
         finish(commandPos);
         commandAST = new IfCommand(eAST, c1AST, c2AST, commandPos);
+        
+        
       }
       break;          
       /*case Token.WHILE:
@@ -1031,4 +1037,5 @@ public class Parser {
     }
     return fieldAST;
   }
+  
 }

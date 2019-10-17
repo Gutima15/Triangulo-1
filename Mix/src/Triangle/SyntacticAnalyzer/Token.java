@@ -165,6 +165,17 @@ final class Token extends Object {
 
   };
 
+<<<<<<< HEAD
   private final static int	firstReservedWord = Token.AND,
   				lastReservedWord  = Token.WHILE;
+=======
+
+  private final static int	firstReservedWord = Token.ARRAY,
+  				lastReservedWord  = Token.WHILE;
+
+  //Obtiene la última palabra reservada
+  public static int getLastReservedWord(){
+    return lastReservedWord;
+  }
+>>>>>>> steph
 }
