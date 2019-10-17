@@ -86,6 +86,7 @@ import Triangle.AbstractSyntaxTrees.UntilCommand;
 import Triangle.AbstractSyntaxTrees.VarActualParameter;
 import Triangle.AbstractSyntaxTrees.VarDeclaration;
 import Triangle.AbstractSyntaxTrees.VarFormalParameter;
+import Triangle.AbstractSyntaxTrees.VarInitDeclaration;
 import Triangle.AbstractSyntaxTrees.Visitor;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
 import Triangle.AbstractSyntaxTrees.WhileCommand;
@@ -157,24 +158,24 @@ public final class Checker implements Visitor {
     ast.C.visit(this, null);
     return null;
   }
-  public Object visitUntilCommand(UntilCommand ast, Object o) {  // Se agrega el método visitUntilCommand donde
-    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null); /// Nos aseguramos que siempre reciba una expresión booleana
+  public Object visitUntilCommand(UntilCommand ast, Object o) {  // Se agrega el mï¿½todo visitUntilCommand donde
+    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null); /// Nos aseguramos que siempre reciba una expresiï¿½n booleana
     if (! eType.equals(StdEnvironment.booleanType)) //
       reporter.reportError("Boolean expression expected here", "", ast.E.position); //
     ast.C.visit(this, null); // 
     return null;///
   }
   
-  public Object visitDoUntilCommand(DoUntilCommand ast, Object o){ // Se agrega el método visitDoUntilCommand
-    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null); /// Nos aseguramos que siempre reciba una expresión booleana
+  public Object visitDoUntilCommand(DoUntilCommand ast, Object o){ // Se agrega el mï¿½todo visitDoUntilCommand
+    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null); /// Nos aseguramos que siempre reciba una expresiï¿½n booleana
     if (! eType.equals(StdEnvironment.booleanType)) //
       reporter.reportError("Boolean expression expected here", "", ast.E.position); //
     ast.C.visit(this, null); // 
     return null;///
   }
   
-  public Object visitDoWhileCommand(DoWhileCommand ast, Object o){ // Se agrega el método visitDoWhileCommand
-    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null); /// Nos aseguramos que siempre reciba una expresión booleana
+  public Object visitDoWhileCommand(DoWhileCommand ast, Object o){ // Se agrega el mï¿½todo visitDoWhileCommand
+    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null); /// Nos aseguramos que siempre reciba una expresiï¿½n booleana
     if (! eType.equals(StdEnvironment.booleanType)) //
       reporter.reportError("Boolean expression expected here", "", ast.E.position); //
     ast.C.visit(this, null); // 
@@ -374,6 +375,16 @@ public final class Checker implements Visitor {
 
   public Object visitVarDeclaration(VarDeclaration ast, Object o) {
     ast.T = (TypeDenoter) ast.T.visit(this, null);
+    idTable.enter (ast.I.spelling, ast);
+    if (ast.duplicated)
+      reporter.reportError ("identifier \"%\" already declared",
+                            ast.I.spelling, ast.position);
+
+    return null;
+  }
+  /////Se agrega el visit correspondiente, se desconoce si hace lo que deberï¿½a.
+  public Object visitVarInitDeclaration(VarInitDeclaration ast, Object o) {
+    ast.E.visit(this, null);
     idTable.enter (ast.I.spelling, ast);
     if (ast.duplicated)
       reporter.reportError ("identifier \"%\" already declared",
