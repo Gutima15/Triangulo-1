@@ -167,7 +167,7 @@ final class Token extends Object {
 
   private final static int	firstReservedWord = Token.AND,
   				lastReservedWord  = Token.WHILE;
-  //Obtiene la última palabra reservada
+  //Obtiene la Ãºltima palabra reservada
   public static int getLastReservedWord(){
     return lastReservedWord;
   }

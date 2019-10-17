@@ -21,7 +21,7 @@ import Triangle.CodeGenerator.Encoder;
  * to get to the ASTs in order to draw them in the IDE without modifying the
  * original Triangle code.
  *
- * @author Luis Leopoldo Pérez <luiperpe@ns.isi.ulatina.ac.cr>
+ * @author Luis Leopoldo Pï¿½rez <luiperpe@ns.isi.ulatina.ac.cr>
  */
 public class IDECompiler {
 
@@ -47,22 +47,23 @@ public class IDECompiler {
         System.out.println("Syntactic Analysis ...");
         SourceFile source = new SourceFile(sourceName);
         Scanner scanner = new Scanner(source);
+        scanner.enableWriting(sourceName.replace(".tri", ".html")); //--
         report = new IDEReporter();
         Parser parser = new Parser(scanner, report);
         boolean success = false;
         
         rootAST = parser.parseProgram();
         if (report.numErrors == 0) {
-            //System.out.println("Contextual Analysis ...");//Comentar para que funcione el sintáctico solo
-            //Checker checker = new Checker(report);        //Comentar para que funcione el sintáctico solo
-            //checker.check(rootAST);                       //Comentar para que funcione el sintáctico solo
+            //System.out.println("Contextual Analysis ...");//Comentar para que funcione el sintï¿½ctico solo
+            //Checker checker = new Checker(report);        //Comentar para que funcione el sintï¿½ctico solo
+            //checker.check(rootAST);                       //Comentar para que funcione el sintï¿½ctico solo
             if (report.numErrors == 0) {
-              //  System.out.println("Code Generation ...");//Comentar para que funcione el sintáctico solo
-//                Encoder encoder = new Encoder(report);    //Comentar para que funcione el sintáctico solo
-  //              encoder.encodeRun(rootAST, false);        //Comentar para que funcione el sintáctico solo
+              //  System.out.println("Code Generation ...");//Comentar para que funcione el sintï¿½ctico solo
+//                Encoder encoder = new Encoder(report);    //Comentar para que funcione el sintï¿½ctico solo
+  //              encoder.encodeRun(rootAST, false);        //Comentar para que funcione el sintï¿½ctico solo
                 
                 if (report.numErrors == 0) {
-    //                encoder.saveObjectProgram(sourceName.replace(".tri", ".tam"));//Comentar para que funcione el sintáctico solo
+    //                encoder.saveObjectProgram(sourceName.replace(".tri", ".tam"));//Comentar para que funcione el sintï¿½ctico solo
                     success = true;
                 }
             }

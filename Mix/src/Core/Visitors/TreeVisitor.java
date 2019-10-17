@@ -83,7 +83,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
  *
  * Generates DefaultMutableTreeNodes, used to draw a JTree.
  *
- * @author Luis Leopoldo Pérez <luiperpe@ns.isi.ulatina.ac.cr>
+ * @author Luis Leopoldo  <luiperpe@ns.isi.ulatina.ac.cr>
  */
 public class TreeVisitor implements Visitor {
       
@@ -111,7 +111,7 @@ public class TreeVisitor implements Visitor {
         return(createTernary("If Command", ast.E, ast.C1, ast.C2));
     }
     
-    public Object visitForCommand(ForCommand ast, Object obj) {              // Se añade el visit al nuevo comando for
+    public Object visitForCommand(ForCommand ast, Object obj) {              // Se annade el visit al nuevo comando for
         return(createQuaternary("For Command", ast.I1, ast.E1, ast.E2, ast.C1));
     }
     
