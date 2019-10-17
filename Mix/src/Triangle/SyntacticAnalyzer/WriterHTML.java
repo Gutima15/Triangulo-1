@@ -11,7 +11,7 @@ public class WriterHTML {
     private String endTag;//Cierre de etiqueta
     private String estilo = 
         "<style>" +
-	"div.code{ font-family : \"Courier New\", \"Arial\"; font-size : 1em;}\n" +
+	"div.code{ font-family : \"Courier New\", \"Lucida Console\"; font-size : 1em;}\n" +
         "reservedword{font-weight: bold; }\n" +
 	"literal{color: #013ba5;}\n" +
         "comment{color: #53a501;}" +

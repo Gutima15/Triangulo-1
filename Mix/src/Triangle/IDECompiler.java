@@ -69,11 +69,13 @@ public class IDECompiler {
             }
         }
 
-        if (success)
+        if (success){
             System.out.println("Compilation was successful.");
-        else
+            System.out.println("Generating html file...");
+            scanner.finishWriting();
+        }else{
             System.out.println("Compilation was unsuccessful.");
-        
+        }   
         return(success);
     }
       
