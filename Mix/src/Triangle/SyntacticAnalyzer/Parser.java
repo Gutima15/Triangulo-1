@@ -82,6 +82,7 @@ import Triangle.AbstractSyntaxTrees.UntilCommand;
 import Triangle.AbstractSyntaxTrees.VarActualParameter;
 import Triangle.AbstractSyntaxTrees.VarDeclaration;
 import Triangle.AbstractSyntaxTrees.VarFormalParameter;
+import Triangle.AbstractSyntaxTrees.VarInitDeclaration;
 import Triangle.AbstractSyntaxTrees.Vname;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
 import Triangle.AbstractSyntaxTrees.WhileCommand;
@@ -669,17 +670,17 @@ public class Parser {
 
     SourcePosition declarationPos = new SourcePosition();
     start(declarationPos);
-    declarationAST = parseCompoundDeclaration();
+    declarationAST =  parseSingleDeclaration();//parseCompoundDeclaration(); es la correcta
     while (currentToken.kind == Token.SEMICOLON) {
       acceptIt();
-      Declaration d2AST = parseCompoundDeclaration();
+      Declaration d2AST = parseSingleDeclaration(); //parseCompoundDeclaration();
       finish(declarationPos);
       declarationAST = new SequentialDeclaration(declarationAST, d2AST,
         declarationPos);
     }
     return declarationAST;
   }
-
+/*
   Declaration parseCompoundDeclaration() throws SyntaxError {
       Declaration dAST = null; // in case there's a syntactic error
       SourcePosition declarationPos = new SourcePosition();
@@ -751,7 +752,7 @@ public class Parser {
       finish(procFuncPos);
       procFuncAST = new ProcFuncs(pfAST, pfAST2, procFuncPos);// **ojo este tiene un s al fin
   }
-  
+  */
   Declaration parseSingleDeclaration() throws SyntaxError {
     Declaration declarationAST = null; // in case there's a syntactic error
 
