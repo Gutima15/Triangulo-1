@@ -87,6 +87,9 @@ import Triangle.AbstractSyntaxTrees.VarActualParameter;
 import Triangle.AbstractSyntaxTrees.VarDeclaration;
 import Triangle.AbstractSyntaxTrees.VarFormalParameter;
 import Triangle.AbstractSyntaxTrees.VarInitDeclaration;
+import Triangle.AbstractSyntaxTrees.LocalDeclaration;
+import Triangle.AbstractSyntaxTrees.ProcFuncs;
+import Triangle.AbstractSyntaxTrees.RecursiveDeclaration;
 import Triangle.AbstractSyntaxTrees.Visitor;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
 import Triangle.AbstractSyntaxTrees.WhileCommand;
@@ -382,7 +385,7 @@ public final class Checker implements Visitor {
 
     return null;
   }
-  /////Se agrega el visit correspondiente, se desconoce si hace lo que deber�a.
+  /////Se agrega el visit correspondiente, se desconoce si hace lo que deberia.
   public Object visitVarInitDeclaration(VarInitDeclaration ast, Object o) {
     ast.E.visit(this, null);
     idTable.enter (ast.I.spelling, ast);
@@ -390,6 +393,18 @@ public final class Checker implements Visitor {
       reporter.reportError ("identifier \"%\" already declared",
                             ast.I.spelling, ast.position);
 
+    return null;
+  }
+  
+    /////Se agrega el visit correspondiente, se desconoce si hace lo que deberia.
+  public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
+    
+    return null;
+  }
+  
+    /////Se agrega el visit correspondiente, se desconoce si hace lo que deberia.
+  public Object visitLocalDeclaration(LocalDeclaration ast, Object o) {
+    
     return null;
   }
 
@@ -978,6 +993,11 @@ public final class Checker implements Visitor {
     StdEnvironment.unequalDecl = declareStdBinaryOp("\\=", StdEnvironment.anyType, StdEnvironment.anyType, StdEnvironment.booleanType);
 
   }
+
+    @Override
+    public Object visitProcFuncs(ProcFuncs ast, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
     
 }

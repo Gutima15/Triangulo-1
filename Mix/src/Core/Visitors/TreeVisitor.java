@@ -42,6 +42,7 @@ import Triangle.AbstractSyntaxTrees.IntegerExpression;
 import Triangle.AbstractSyntaxTrees.IntegerLiteral;
 import Triangle.AbstractSyntaxTrees.LetCommand;
 import Triangle.AbstractSyntaxTrees.LetExpression;
+import Triangle.AbstractSyntaxTrees.LocalDeclaration;
 import Triangle.AbstractSyntaxTrees.MultipleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.MultipleArrayAggregate;
 import Triangle.AbstractSyntaxTrees.MultipleFieldTypeDenoter;
@@ -54,6 +55,7 @@ import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
 import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
 import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
+import Triangle.AbstractSyntaxTrees.RecursiveDeclaration;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
@@ -135,6 +137,7 @@ public class TreeVisitor implements Visitor {
     public Object visitDoUntilCommand(DoUntilCommand ast, Object obj) { // Nuevo comando DoUntil
         return(createBinary("DoUntil Command", ast.E, ast.C)); //
     }
+    
     // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc=" Expressions ">
@@ -220,6 +223,14 @@ public class TreeVisitor implements Visitor {
     
     public Object visitVarInitDeclaration(VarInitDeclaration ast, Object obj) {
         return(createBinary("Variable Init Declaration", ast.I, ast.E));
+    }
+    
+    public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object obj) {
+        return(createUnary("Recursive Declaration", ast.I));
+    }
+    
+    public Object visitLocalDeclaration(LocalDeclaration ast, Object obj) {
+        return(createBinary("Local Declaration", ast.D1, ast.D2));
     }
     // </editor-fold>
     
