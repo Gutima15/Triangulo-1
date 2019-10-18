@@ -352,7 +352,15 @@ public class TableVisitor implements Visitor {
       ast.E.visit(this, null);
       return(null);
   }
-  
+  public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
+      ast.P.visit(this, null);
+      return(null);
+    }
+
+   
+  public Object visitLocalDeclaration(LocalDeclaration ast, Object o) {
+      throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
   // </editor-fold>
 
   // <editor-fold defaultstate="collapsed" desc=" Aggregates ">
@@ -669,16 +677,6 @@ public class TableVisitor implements Visitor {
 
     @Override
     public Object visitProcFuncs(ProcFuncs ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Object visitLocalDeclaration(LocalDeclaration ast, Object o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

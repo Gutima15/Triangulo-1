@@ -52,6 +52,7 @@ import Triangle.AbstractSyntaxTrees.Operator;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
 import Triangle.AbstractSyntaxTrees.ProcDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
+import Triangle.AbstractSyntaxTrees.ProcFuncs;
 import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
 import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
@@ -187,6 +188,13 @@ public class TreeVisitor implements Visitor {
     }
     // </editor-fold>
     
+    //<editor-fold defaultstate="collapsed" desc="ProcFunc">
+    // ProcFunc
+    public Object visitProcFuncs(ProcFuncs ast, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    //</editor-fold>
+    
     // <editor-fold defaultstate="collapsed" desc=" Declarations ">
     // Declarations
     public Object visitBinaryOperatorDeclaration(BinaryOperatorDeclaration ast, Object obj) {
@@ -226,12 +234,13 @@ public class TreeVisitor implements Visitor {
     }
     
     public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object obj) {
-        return(createUnary("Recursive Declaration", ast.I));
+        return(createUnary("Recursive Declaration", ast.P));
     }
     
     public Object visitLocalDeclaration(LocalDeclaration ast, Object obj) {
         return(createBinary("Local Declaration", ast.D1, ast.D2));
     }
+       
     // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc=" Aggregates ">
@@ -471,6 +480,5 @@ public class TreeVisitor implements Visitor {
         return(t);             
     }
     // </editor-fold>
-
-    
+  
 }

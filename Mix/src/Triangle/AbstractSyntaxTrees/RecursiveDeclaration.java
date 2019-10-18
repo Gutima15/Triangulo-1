@@ -21,12 +21,12 @@ public class RecursiveDeclaration extends Declaration {
   public RecursiveDeclaration (ProcFuncs pfAST,
                          SourcePosition thePosition) {
     super (thePosition);
-    I = pfAST;
+    P = pfAST;
   }
 
   public Object visit(Visitor v, Object o) {
     return v.visitRecursiveDeclaration(this, o);
   }
 
-  public ProcFuncs I;
+  public ProcFuncs P;
 }

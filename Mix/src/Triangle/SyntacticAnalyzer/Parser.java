@@ -141,13 +141,8 @@ public class Parser {
     errorReporter.reportError(messageTemplate, tokenQuoted, pos);
     throw(new SyntaxError());
   }
-
-///////////////////////////////////////////////////////////////////////////////
-//
+// <editor-fold defaultstate="collapsed" desc=" PROGRAMS ">
 // PROGRAMS
-//
-///////////////////////////////////////////////////////////////////////////////
-
   public Program parseProgram() {
 
     Program programAST = null;
@@ -167,12 +162,10 @@ public class Parser {
     catch (SyntaxError s) { return null; }
     return programAST;
   }
-
-///////////////////////////////////////////////////////////////////////////////
-//
+// </editor-fold>
+  
+// <editor-fold defaultstate="collapsed" desc=" LITERALS ">
 // LITERALS
-//
-///////////////////////////////////////////////////////////////////////////////
 
 // parseIntegerLiteral parses an integer-literal, and constructs
 // a leaf AST to represent it.
@@ -246,12 +239,10 @@ public class Parser {
     }
     return O;
   }
-
-///////////////////////////////////////////////////////////////////////////////
-//
-// COMMANDS
-//
-///////////////////////////////////////////////////////////////////////////////
+// </editor-fold>
+  
+// <editor-fold defaultstate="collapsed" desc=" Commands ">
+// Commands
 
 // parseCommand parses the command, and constructs an AST
 // to represent its phrase structure.
@@ -433,13 +424,11 @@ public class Parser {
 
     return commandAST;
   }
-
-///////////////////////////////////////////////////////////////////////////////
-//
-// EXPRESSIONS
-//
-///////////////////////////////////////////////////////////////////////////////
-
+// </editor-fold>
+  
+// <editor-fold defaultstate="collapsed" desc=" Expressions ">
+// Expressions
+  
   Expression parseExpression() throws SyntaxError {
     Expression expressionAST = null; // in case there's a syntactic error
 
@@ -622,12 +611,10 @@ public class Parser {
     }
     return aggregateAST;
   }
-
-///////////////////////////////////////////////////////////////////////////////
-//
+// </editor-fold>
+  
+// <editor-fold defaultstate="collapsed" desc=" VALUE-OR-VARIABLE NAMES ">
 // VALUE-OR-VARIABLE NAMES
-//
-///////////////////////////////////////////////////////////////////////////////
 
   Vname parseVname () throws SyntaxError {
     Vname vnameAST = null; // in case there's a syntactic error
@@ -658,13 +645,10 @@ public class Parser {
     }
     return vAST;
   }
+// </editor-fold>
 
-///////////////////////////////////////////////////////////////////////////////
-//
+// <editor-fold defaultstate="collapsed" desc=" DECLARATIONS ">
 // DECLARATIONS
-//
-///////////////////////////////////////////////////////////////////////////////
-
   Declaration parseDeclaration() throws SyntaxError {
     Declaration declarationAST = null; // in case there's a syntactic error
 
@@ -732,13 +716,13 @@ public class Parser {
           accept(Token.IS);
           Expression eAST = parseExpression();
           finish(procFuncPos);
-          procFuncAST = new FuncProcFunc(iAST, fpsAST, tAST, eAST, procFuncPos);
+          procFuncAST = new RecursiveFunc(iAST, fpsAST, tAST, eAST, procFuncPos);
       }else{          
           accept(Token.IS);          
           Command cAST = parseCommand();
           accept(Token.END);
           finish(procFuncPos);
-          procFuncAST = new ProcProcFunc(iAST, fpsAST, cAST, procFuncPos);
+          procFuncAST = new RecursiveProc(iAST, fpsAST, cAST, procFuncPos);
       }
       return procFuncAST;      
   }
@@ -747,11 +731,16 @@ public class Parser {
       SourcePosition procFuncPos = new SourcePosition();
       start(procFuncPos);
       ProcFunc pfAST = parseProcFunc();
+      do {
       accept(Token.AND);
       ProcFunc pfAST2 = parseProcFunc();
-      finish(procFuncPos);
+      finish(pfPos);
       procFuncAST = new ProcFuncs(pfAST, pfAST2, procFuncPos);// **ojo este tiene un s al fin
-  }
+    } while (currentToken.kind == Token.PIPE);
+    procFuncsAST = pfAST1;
+    return procFuncsAST;
+  }    
+  
   */
   Declaration parseSingleDeclaration() throws SyntaxError {
     Declaration declarationAST = null; // in case there's a syntactic error
@@ -841,12 +830,10 @@ public class Parser {
     }
     return declarationAST;
   }
-
-///////////////////////////////////////////////////////////////////////////////
-//
+// </editor-fold>
+  
+// <editor-fold defaultstate="collapsed" desc=" PARAMETERS ">
 // PARAMETERS
-//
-///////////////////////////////////////////////////////////////////////////////
 
   FormalParameterSequence parseFormalParameterSequence() throws SyntaxError {
     FormalParameterSequence formalsAST;
@@ -1045,13 +1032,10 @@ public class Parser {
     }
     return actualAST;
   }
-
-///////////////////////////////////////////////////////////////////////////////
-//
+// </editor-fold>
+  
+// <editor-fold defaultstate="collapsed" desc="TYPE-DENOTERS ">
 // TYPE-DENOTERS
-//
-///////////////////////////////////////////////////////////////////////////////
-
   TypeDenoter parseTypeDenoter() throws SyntaxError {
     TypeDenoter typeAST = null; // in case there's a syntactic error
     SourcePosition typePos = new SourcePosition();
@@ -1118,5 +1102,5 @@ public class Parser {
     }
     return fieldAST;
   }
-  
+  //</editor-fold>
 }
