@@ -42,6 +42,7 @@ import Triangle.AbstractSyntaxTrees.IntegerExpression;
 import Triangle.AbstractSyntaxTrees.IntegerLiteral;
 import Triangle.AbstractSyntaxTrees.LetCommand;
 import Triangle.AbstractSyntaxTrees.LetExpression;
+import Triangle.AbstractSyntaxTrees.LocalDeclaration;
 import Triangle.AbstractSyntaxTrees.MultipleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.MultipleArrayAggregate;
 import Triangle.AbstractSyntaxTrees.MultipleFieldTypeDenoter;
@@ -51,9 +52,11 @@ import Triangle.AbstractSyntaxTrees.Operator;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
 import Triangle.AbstractSyntaxTrees.ProcDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
+import Triangle.AbstractSyntaxTrees.ProcFuncs;
 import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
 import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
+import Triangle.AbstractSyntaxTrees.RecursiveDeclaration;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
@@ -71,6 +74,7 @@ import Triangle.AbstractSyntaxTrees.UntilCommand;
 import Triangle.AbstractSyntaxTrees.VarActualParameter;
 import Triangle.AbstractSyntaxTrees.VarDeclaration;
 import Triangle.AbstractSyntaxTrees.VarFormalParameter;
+import Triangle.AbstractSyntaxTrees.VarInitDeclaration;
 import Triangle.AbstractSyntaxTrees.Visitor;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
 import Triangle.AbstractSyntaxTrees.WhileCommand;
@@ -82,7 +86,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
  *
  * Generates DefaultMutableTreeNodes, used to draw a JTree.
  *
- * @author Luis Leopoldo Pérez <luiperpe@ns.isi.ulatina.ac.cr>
+ * @author Luis Leopoldo  <luiperpe@ns.isi.ulatina.ac.cr>
  */
 public class TreeVisitor implements Visitor {
       
@@ -110,7 +114,7 @@ public class TreeVisitor implements Visitor {
         return(createTernary("If Command", ast.E, ast.C1, ast.C2));
     }
     
-    public Object visitForCommand(ForCommand ast, Object obj) {              // Se añade el visit al nuevo comando for
+    public Object visitForCommand(ForCommand ast, Object obj) {              // Se annade el visit al nuevo comando for
         return(createQuaternary("For Command", ast.I1, ast.E1, ast.E2, ast.C1));
     }
     
@@ -134,6 +138,7 @@ public class TreeVisitor implements Visitor {
     public Object visitDoUntilCommand(DoUntilCommand ast, Object obj) { // Nuevo comando DoUntil
         return(createBinary("DoUntil Command", ast.E, ast.C)); //
     }
+    
     // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc=" Expressions ">
@@ -183,6 +188,13 @@ public class TreeVisitor implements Visitor {
     }
     // </editor-fold>
     
+    //<editor-fold defaultstate="collapsed" desc="ProcFunc">
+    // ProcFunc
+    public Object visitProcFuncs(ProcFuncs ast, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    //</editor-fold>
+    
     // <editor-fold defaultstate="collapsed" desc=" Declarations ">
     // Declarations
     public Object visitBinaryOperatorDeclaration(BinaryOperatorDeclaration ast, Object obj) {
@@ -216,6 +228,19 @@ public class TreeVisitor implements Visitor {
     public Object visitVarDeclaration(VarDeclaration ast, Object obj) {
         return(createBinary("Variable Declaration", ast.I, ast.T));
     }
+    
+    public Object visitVarInitDeclaration(VarInitDeclaration ast, Object obj) {
+        return(createBinary("Variable Init Declaration", ast.I, ast.E));
+    }
+    
+    public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object obj) {
+        return(createUnary("Recursive Declaration", ast.P));
+    }
+    
+    public Object visitLocalDeclaration(LocalDeclaration ast, Object obj) {
+        return(createBinary("Local Declaration", ast.D1, ast.D2));
+    }
+       
     // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc=" Aggregates ">
@@ -455,6 +480,5 @@ public class TreeVisitor implements Visitor {
         return(t);             
     }
     // </editor-fold>
-
-    
+  
 }
