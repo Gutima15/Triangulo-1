@@ -52,6 +52,7 @@ import Triangle.AbstractSyntaxTrees.IntegerExpression;
 import Triangle.AbstractSyntaxTrees.IntegerLiteral;
 import Triangle.AbstractSyntaxTrees.LetCommand;
 import Triangle.AbstractSyntaxTrees.LetExpression;
+import Triangle.AbstractSyntaxTrees.LocalDeclaration;
 import Triangle.AbstractSyntaxTrees.MultipleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.MultipleArrayAggregate;
 import Triangle.AbstractSyntaxTrees.MultipleFieldTypeDenoter;
@@ -61,10 +62,14 @@ import Triangle.AbstractSyntaxTrees.Operator;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
 import Triangle.AbstractSyntaxTrees.ProcDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
+import Triangle.AbstractSyntaxTrees.ProcFunc;
 import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.AbstractSyntaxTrees.RecordAggregate;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
 import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
+import Triangle.AbstractSyntaxTrees.RecursiveDeclaration;
+import Triangle.AbstractSyntaxTrees.RecursiveFunction;
+import Triangle.AbstractSyntaxTrees.RecursiveProcedure;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
@@ -141,6 +146,7 @@ public class Parser {
     errorReporter.reportError(messageTemplate, tokenQuoted, pos);
     throw(new SyntaxError());
   }
+  
 // <editor-fold defaultstate="collapsed" desc=" PROGRAMS ">
 // PROGRAMS
   public Program parseProgram() {
@@ -646,7 +652,56 @@ public class Parser {
     return vAST;
   }
 // </editor-fold>
-
+  
+// <editor-fold defaultstate="collapsed" desc=" ProcFunc ">
+// ProcFunc
+  
+  ProcFunc parseProcFunc()throws SyntaxError {
+      ProcFunc procFuncAST = null;
+      SourcePosition procFuncPos = new SourcePosition();
+      start(procFuncPos);      
+      if ((currentToken.kind != Token.FUNC) && (currentToken.kind != Token.PROC)){//
+            syntacticError("Found \"%\" 'FUNC'cor 'PROC' statement was expect.",currentToken.spelling); 
+      }
+      acceptIt(); //Acepto el comando PROC o FUNC
+      boolean isFunc = currentToken.kind==Token.FUNC;
+      Identifier iAST = parseIdentifier();
+      accept(Token.LPAREN);      
+      FormalParameterSequence fpsAST = parseFormalParameterSequence();
+      accept(Token.RPAREN);
+      if (isFunc==true){
+          accept(Token.COLON);
+          TypeDenoter tAST = parseTypeDenoter();
+          accept(Token.IS);
+          Expression eAST = parseExpression();
+          finish(procFuncPos);
+          procFuncAST = new RecursiveFunction(iAST, fpsAST, tAST, eAST, procFuncPos); //Falta crear...
+      }else{          
+          accept(Token.IS);          
+          Command cAST = parseCommand();
+          accept(Token.END);
+          finish(procFuncPos);
+          procFuncAST = new RecursiveProcedure(iAST, fpsAST, cAST, procFuncPos); //Falta crear
+      }
+      return procFuncAST;      
+  }
+  ProcFunc parseProcFuncs() throws SyntaxError {
+      ProcFunc procFuncAST = null;
+      SourcePosition procFuncPos = new SourcePosition();
+      start(procFuncPos);
+      ProcFunc pfAST = parseProcFunc();
+      do {
+      accept(Token.AND);
+      ProcFunc pfAST2 = parseProcFunc();
+      finish(procFuncPos);
+      procFuncAST = new ProcFuncs(pfAST, pfAST2, procFuncPos);// **ojo este tiene un s al fin
+    } while (currentToken.kind == Token.AND);
+    procFuncAST = pfAST;
+    return procFuncAST;
+  }    
+  
+// </editor-fold>
+  
 // <editor-fold defaultstate="collapsed" desc=" DECLARATIONS ">
 // DECLARATIONS
   Declaration parseDeclaration() throws SyntaxError {
@@ -654,17 +709,17 @@ public class Parser {
 
     SourcePosition declarationPos = new SourcePosition();
     start(declarationPos);
-    declarationAST =  parseSingleDeclaration();//parseCompoundDeclaration(); es la correcta
+    declarationAST = parseCompoundDeclaration(); //es la correcta
     while (currentToken.kind == Token.SEMICOLON) {
       acceptIt();
-      Declaration d2AST = parseSingleDeclaration(); //parseCompoundDeclaration();
+      Declaration d2AST = parseCompoundDeclaration();// Es la correcta
       finish(declarationPos);
       declarationAST = new SequentialDeclaration(declarationAST, d2AST,
         declarationPos);
     }
     return declarationAST;
   }
-/*
+
   Declaration parseCompoundDeclaration() throws SyntaxError {
       Declaration dAST = null; // in case there's a syntactic error
       SourcePosition declarationPos = new SourcePosition();
@@ -695,53 +750,8 @@ public class Parser {
       }
       return dAST;
       
-  }
-  ProcFunc parseProcFunc()throws SyntaxError {
-      ProcFunc procFuncAST = null;
-      SourcePosition procFuncPos = new SourcePosition();
-      start(procFuncPos);      
-      if ((currentToken.kind != Token.FUNC) && (currentToken.kind != Token.PROC)){//
-            syntacticError("Found \"%\" 'FUNC'cor 'PROC' statement was expect.",currentToken.spelling);
-            break;//
-      }
-      acceptIt(); //Acepto el comando PROC o FUNC
-      boolean isFunc = currentToken.kind==Token.FUNC;
-      Identifier iAST = parseIdentifier();
-      accept(Token.LPAREN);      
-      FormalParameterSequence fpsAST = parseFormalParameterSequence();
-      accept(Token.RPAREN);
-      if (isFunc==true){
-          accept(Token.COLON);
-          TypeDenoter tAST = parseTypeDenoter();
-          accept(Token.IS);
-          Expression eAST = parseExpression();
-          finish(procFuncPos);
-          procFuncAST = new RecursiveFunc(iAST, fpsAST, tAST, eAST, procFuncPos);
-      }else{          
-          accept(Token.IS);          
-          Command cAST = parseCommand();
-          accept(Token.END);
-          finish(procFuncPos);
-          procFuncAST = new RecursiveProc(iAST, fpsAST, cAST, procFuncPos);
-      }
-      return procFuncAST;      
-  }
-  ProcFunc parseProcFuncs() throws SyntaxError {
-      ProcFunc procFuncAST = null;
-      SourcePosition procFuncPos = new SourcePosition();
-      start(procFuncPos);
-      ProcFunc pfAST = parseProcFunc();
-      do {
-      accept(Token.AND);
-      ProcFunc pfAST2 = parseProcFunc();
-      finish(pfPos);
-      procFuncAST = new ProcFuncs(pfAST, pfAST2, procFuncPos);// **ojo este tiene un s al fin
-    } while (currentToken.kind == Token.PIPE);
-    procFuncsAST = pfAST1;
-    return procFuncsAST;
-  }    
+  } 
   
-  */
   Declaration parseSingleDeclaration() throws SyntaxError {
     Declaration declarationAST = null; // in case there's a syntactic error
 

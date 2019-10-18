@@ -44,7 +44,7 @@ public interface Visitor {
   public abstract Object visitVnameExpression(VnameExpression ast, Object o);
   
   // Proc Funcs
-  public abstract Object visitProcFuncs(ProcFuncs ast, Object o);
+  public abstract Object visitProcFuncs(ProcFunc ast, Object o);
 
   // Declarations
   public abstract Object visitBinaryOperatorDeclaration(BinaryOperatorDeclaration ast, Object o);

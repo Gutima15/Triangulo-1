@@ -18,15 +18,17 @@ import Triangle.SyntacticAnalyzer.SourcePosition;
 
 public class RecursiveDeclaration extends Declaration {
 
-  public RecursiveDeclaration (ProcFuncs pfAST,
-                         SourcePosition thePosition) {
-    super (thePosition);
-    P = pfAST;
-  }
+  public RecursiveDeclaration(Declaration dAST, ProcFunc pAST, SourcePosition declarationPos) {
+     super (declarationPos);
+     D = dAST;
+     P = pAST;
+     
+    }
 
   public Object visit(Visitor v, Object o) {
     return v.visitRecursiveDeclaration(this, o);
   }
 
-  public ProcFuncs P;
+  public ProcFunc P;
+  public Declaration D;
 }
