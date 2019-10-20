@@ -18,17 +18,19 @@ import Triangle.SyntacticAnalyzer.SourcePosition;
 
 public class LocalDeclaration extends Declaration {
 
-  public LocalDeclaration (Declaration iAST, Declaration iiAST,
-                         SourcePosition thePosition) {
-    super (thePosition);
-    D1 = iAST;
-    D2 = iiAST;
-  }
+  
+
+    public LocalDeclaration(Declaration dAST, Declaration dAST2, SourcePosition declarationPos) {
+        super (declarationPos);
+        D1 = dAST;
+        D2 = dAST2;
+
+    }
 
   public Object visit(Visitor v, Object o) {
     return v.visitLocalDeclaration(this, o);
-  }
-
+  }  
   public Declaration D1;
   public Declaration D2;
+
 }

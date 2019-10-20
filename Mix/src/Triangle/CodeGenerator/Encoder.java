@@ -70,11 +70,14 @@ import Triangle.AbstractSyntaxTrees.Operator;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
 import Triangle.AbstractSyntaxTrees.ProcDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
-import Triangle.AbstractSyntaxTrees.ProcFuncs;
+import Triangle.AbstractSyntaxTrees.ProcFunc;
 import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
 import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
 import Triangle.AbstractSyntaxTrees.RecursiveDeclaration;
+import Triangle.AbstractSyntaxTrees.RecursiveFunction;
+import Triangle.AbstractSyntaxTrees.RecursiveProcedure;
+import Triangle.AbstractSyntaxTrees.SequencialProcFunc;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
@@ -1037,7 +1040,7 @@ public final class Encoder implements Visitor {
     }
 
     @Override
-    public Object visitProcFuncs(ProcFuncs ast, Object o) {
+    public Object visitProcFuncs(ProcFunc ast, Object o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -1048,6 +1051,21 @@ public final class Encoder implements Visitor {
 
     @Override
     public Object visitLocalDeclaration(LocalDeclaration ast, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitRecursiveProcedure(RecursiveProcedure ast, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitRecursiveFunction(RecursiveFunction ast, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitSequentialProcFunc(SequencialProcFunc ast, Object o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

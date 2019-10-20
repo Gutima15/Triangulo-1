@@ -52,6 +52,7 @@ import Triangle.AbstractSyntaxTrees.IntegerExpression;
 import Triangle.AbstractSyntaxTrees.IntegerLiteral;
 import Triangle.AbstractSyntaxTrees.LetCommand;
 import Triangle.AbstractSyntaxTrees.LetExpression;
+import Triangle.AbstractSyntaxTrees.LocalDeclaration;
 import Triangle.AbstractSyntaxTrees.MultipleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.MultipleArrayAggregate;
 import Triangle.AbstractSyntaxTrees.MultipleFieldTypeDenoter;
@@ -61,10 +62,15 @@ import Triangle.AbstractSyntaxTrees.Operator;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
 import Triangle.AbstractSyntaxTrees.ProcDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
+import Triangle.AbstractSyntaxTrees.ProcFunc;
 import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.AbstractSyntaxTrees.RecordAggregate;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
 import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
+import Triangle.AbstractSyntaxTrees.RecursiveDeclaration;
+import Triangle.AbstractSyntaxTrees.RecursiveFunction;
+import Triangle.AbstractSyntaxTrees.RecursiveProcedure;
+import Triangle.AbstractSyntaxTrees.SequencialProcFunc;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
@@ -109,9 +115,9 @@ public class Parser {
     if (currentToken.kind == tokenExpected) {
       previousTokenPosition = currentToken.position;
       currentToken = lexicalAnalyser.scan();
-      //System.out.println(currentToken);
+      System.out.println(currentToken);
     } else {
-      syntacticError("\"%\" expected here", Token.spell(tokenExpected));//Revisar
+      syntacticError("\"%\" expected hereeeeeee", Token.spell(tokenExpected));//Revisar
     }
   }
 
@@ -141,6 +147,7 @@ public class Parser {
     errorReporter.reportError(messageTemplate, tokenQuoted, pos);
     throw(new SyntaxError());
   }
+  
 // <editor-fold defaultstate="collapsed" desc=" PROGRAMS ">
 // PROGRAMS
   public Program parseProgram() {
@@ -248,8 +255,7 @@ public class Parser {
 // to represent its phrase structure.
 
   Command parseCommand() throws SyntaxError {
-    Command commandAST = null; // in case there's a syntactic error
-
+    Command commandAST = null; // in case there's a syntactic err
     SourcePosition commandPos = new SourcePosition();
 
     start(commandPos);
@@ -354,8 +360,12 @@ public class Parser {
                 }else{
                     commandAST = new DoWhileCommand(eAST, cAST, commandPos); //|"loop" "do" Command "while" Expression "repeat"
                 }                //
-            }  //
+            } 
             break;//
+            
+            default:
+              syntacticError("\"%\" cannot be next to loop. One of the next is needed: do, for, until,while. ",currentToken.spelling);
+              break;
         }
         //
     }
@@ -646,63 +656,16 @@ public class Parser {
     return vAST;
   }
 // </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc=" DECLARATIONS ">
-// DECLARATIONS
-  Declaration parseDeclaration() throws SyntaxError {
-    Declaration declarationAST = null; // in case there's a syntactic error
-
-    SourcePosition declarationPos = new SourcePosition();
-    start(declarationPos);
-    declarationAST =  parseSingleDeclaration();//parseCompoundDeclaration(); es la correcta
-    while (currentToken.kind == Token.SEMICOLON) {
-      acceptIt();
-      Declaration d2AST = parseSingleDeclaration(); //parseCompoundDeclaration();
-      finish(declarationPos);
-      declarationAST = new SequentialDeclaration(declarationAST, d2AST,
-        declarationPos);
-    }
-    return declarationAST;
-  }
-/*
-  Declaration parseCompoundDeclaration() throws SyntaxError {
-      Declaration dAST = null; // in case there's a syntactic error
-      SourcePosition declarationPos = new SourcePosition();
-      start(declarationPos);
-      dAST = parseSingleDeclaration();
-      switch (currentToken.kind) {
-          case Token.RECURSIVE:{
-              acceptIt();
-              ProcFunc pAST= parseProcFuncs();
-              accept(Token.END);
-              finish(declarationPos);
-              dAST = new RecursiveDeclaration(dAST, pAST, declarationPos);
-          }
-          break;
-          case Token.LOCAL:{
-              acceptIt();
-              Declaration dAST2= parseDeclaration();
-              accept(Token.IN);
-              Declaration dAST3= parseDeclaration();
-              accept(Token.END);
-              finish(declarationPos);
-              dAST = new LocalDeclaration(dAST, dAST2, dAST3, declarationPos);
-          }
-          break;
-          default:
-              syntacticError("\"%\" cannot start a declaration", currentToken.spelling);
-              break;
-      }
-      return dAST;
-      
-  }
+  
+// <editor-fold defaultstate="collapsed" desc=" ProcFunc ">
+// ProcFunc
+  
   ProcFunc parseProcFunc()throws SyntaxError {
       ProcFunc procFuncAST = null;
       SourcePosition procFuncPos = new SourcePosition();
       start(procFuncPos);      
       if ((currentToken.kind != Token.FUNC) && (currentToken.kind != Token.PROC)){//
-            syntacticError("Found \"%\" 'FUNC'cor 'PROC' statement was expect.",currentToken.spelling);
-            break;//
+            syntacticError("Found \"%\" 'FUNC'cor 'PROC' statement was expect.",currentToken.spelling); 
       }
       acceptIt(); //Acepto el comando PROC o FUNC
       boolean isFunc = currentToken.kind==Token.FUNC;
@@ -716,13 +679,13 @@ public class Parser {
           accept(Token.IS);
           Expression eAST = parseExpression();
           finish(procFuncPos);
-          procFuncAST = new RecursiveFunc(iAST, fpsAST, tAST, eAST, procFuncPos);
+          procFuncAST = new RecursiveFunction(iAST, fpsAST, tAST, eAST, procFuncPos); //Falta crear...
       }else{          
           accept(Token.IS);          
           Command cAST = parseCommand();
           accept(Token.END);
           finish(procFuncPos);
-          procFuncAST = new RecursiveProc(iAST, fpsAST, cAST, procFuncPos);
+          procFuncAST = new RecursiveProcedure(iAST, fpsAST, cAST, procFuncPos); //Falta crear
       }
       return procFuncAST;      
   }
@@ -734,14 +697,67 @@ public class Parser {
       do {
       accept(Token.AND);
       ProcFunc pfAST2 = parseProcFunc();
-      finish(pfPos);
-      procFuncAST = new ProcFuncs(pfAST, pfAST2, procFuncPos);// **ojo este tiene un s al fin
-    } while (currentToken.kind == Token.PIPE);
-    procFuncsAST = pfAST1;
-    return procFuncsAST;
+      finish(procFuncPos);
+      procFuncAST = new SequencialProcFunc(pfAST, pfAST2, procFuncPos);// **SequencialProcFunc (se toma el nombre inspirados en el command
+    } while (currentToken.kind == Token.AND);                          // dado que él entiende sequencialCommand al final de
+    procFuncAST = pfAST;
+    return procFuncAST;
   }    
   
-  */
+// </editor-fold>
+  
+// <editor-fold defaultstate="collapsed" desc=" DECLARATIONS ">
+// DECLARATIONS
+  Declaration parseDeclaration() throws SyntaxError {
+    Declaration declarationAST = null; // in case there's a syntactic error
+    SourcePosition declarationPos = new SourcePosition();
+    
+    start(declarationPos);
+    declarationAST = parseCompoundDeclaration(); 
+    while (currentToken.kind == Token.SEMICOLON) {
+      acceptIt();
+      Declaration d2AST = parseCompoundDeclaration();// Es la correcta
+      finish(declarationPos);
+      declarationAST = new SequentialDeclaration(declarationAST, d2AST,
+        declarationPos);
+    }
+    return declarationAST;
+  }
+
+  Declaration parseCompoundDeclaration() throws SyntaxError {
+      Declaration dAST = null; // in case there's a syntactic error
+      
+      SourcePosition declarationPos = new SourcePosition();
+      start(declarationPos);
+      
+      switch (currentToken.kind) {
+          case Token.RECURSIVE:{
+              acceptIt();
+              ProcFunc pAST= parseProcFuncs();
+              accept(Token.END);
+              finish(declarationPos);
+              dAST = new RecursiveDeclaration(pAST, declarationPos);
+          }
+          break;
+          case Token.LOCAL:{
+              acceptIt();
+              Declaration dAST2= parseDeclaration();
+              accept(Token.IN);
+              Declaration dAST3= parseDeclaration();
+              accept(Token.END);
+              finish(declarationPos);
+              dAST = new LocalDeclaration(dAST2, dAST3, declarationPos);
+          }
+          break;
+          default:
+              finish(declarationPos); // se maneja como default dado que no hay un token que indique si
+              dAST = parseSingleDeclaration();
+              
+      }
+      return dAST;
+      
+  } 
+  
   Declaration parseSingleDeclaration() throws SyntaxError {
     Declaration declarationAST = null; // in case there's a syntactic error
 
@@ -765,17 +781,21 @@ public class Parser {
       {
         acceptIt();
         Identifier iAST = parseIdentifier();
-        if (currentToken.kind==Token.INIT){
-            accept(Token.INIT);
+        if (currentToken.kind==Token.COLON){
+            acceptIt();
+            TypeDenoter tAST = parseTypeDenoter();
+            finish(declarationPos);
+            declarationAST = new VarDeclaration(iAST, tAST, declarationPos);           
+        }else if (currentToken.kind==Token.INIT){
+            acceptIt();
+            System.out.println(" Entré a init ");
             Expression eAST = parseExpression();
             finish(declarationPos);
             declarationAST = new VarInitDeclaration(iAST, eAST, declarationPos);
         }else{
-        accept(Token.COLON);
-        TypeDenoter tAST = parseTypeDenoter();
-        finish(declarationPos);
-        declarationAST = new VarDeclaration(iAST, tAST, declarationPos);
-      }
+            syntacticError("Found \"%\" instead of : or init",
+                  currentToken.spelling);
+        }
       }
       break;
 
