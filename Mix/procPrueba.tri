@@ -1,5 +1,11 @@
 let
-var a init 5
+	local 
+		var initial: Char 
+	in 
+		proc inc (var a: Integer) ~ a:=a+1 end
+
+	end
+
 in
-skip
+	skip
 end

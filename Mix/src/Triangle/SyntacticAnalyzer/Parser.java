@@ -117,7 +117,7 @@ public class Parser {
       currentToken = lexicalAnalyser.scan();
       //System.out.println(currentToken);
     } else {
-      syntacticError("\"%\" expected hereeeeeee", Token.spell(tokenExpected));//Revisar
+      syntacticError("\"%\" expected here", Token.spell(tokenExpected));//Revisar
     }
   }
 
@@ -664,44 +664,44 @@ public class Parser {
       ProcFunc procFuncAST = null;
       SourcePosition procFuncPos = new SourcePosition();
       start(procFuncPos);      
-      if ((currentToken.kind != Token.FUNC) && (currentToken.kind != Token.PROC)){//
-            syntacticError("Found \"%\" 'FUNC'cor 'PROC' statement was expect.",currentToken.spelling); 
-      }
-      acceptIt(); //Acepto el comando PROC o FUNC
-      boolean isFunc = currentToken.kind==Token.FUNC;
+      int current = currentToken.kind;
+      acceptIt();
       Identifier iAST = parseIdentifier();
       accept(Token.LPAREN);      
       FormalParameterSequence fpsAST = parseFormalParameterSequence();
       accept(Token.RPAREN);
-      if (isFunc==true){
-          accept(Token.COLON);
-          TypeDenoter tAST = parseTypeDenoter();
-          accept(Token.IS);
-          Expression eAST = parseExpression();
-          finish(procFuncPos);
-          procFuncAST = new RecursiveFunction(iAST, fpsAST, tAST, eAST, procFuncPos); //Falta crear...
-      }else{          
+            
+       if (current == Token.FUNC){
+           accept(Token.COLON);
+           TypeDenoter tAST = parseTypeDenoter();
+           accept(Token.IS);
+           Expression eAST = parseExpression();
+           finish(procFuncPos);
+           procFuncAST = new RecursiveFunction(iAST, fpsAST, tAST, eAST, procFuncPos); //Falta crear...
+       }else if(current == Token.PROC){
           accept(Token.IS);          
           Command cAST = parseCommand();
           accept(Token.END);
           finish(procFuncPos);
-          procFuncAST = new RecursiveProcedure(iAST, fpsAST, cAST, procFuncPos); //Falta crear
-      }
-      return procFuncAST;      
+          procFuncAST = new RecursiveProcedure(iAST, fpsAST, cAST, procFuncPos); //Falta crear 
+       }else{
+           syntacticError("\"%\" cannot start a procFunc rule.", currentToken.spelling);
+       }
+       return procFuncAST;            
   }
   ProcFunc parseProcFuncs() throws SyntaxError {
       ProcFunc procFuncAST = null;
       SourcePosition procFuncPos = new SourcePosition();
       start(procFuncPos);
       ProcFunc pfAST = parseProcFunc();
-      do {
-      accept(Token.AND);
-      ProcFunc pfAST2 = parseProcFunc();
-      finish(procFuncPos);
-      procFuncAST = new SequencialProcFunc(pfAST, pfAST2, procFuncPos);// **SequencialProcFunc (se toma el nombre inspirados en el command
-    } while (currentToken.kind == Token.AND);                          // dado que él entiende sequencialCommand al final de
-    procFuncAST = pfAST;
-    return procFuncAST;
+      while(currentToken.kind == Token.AND){
+          accept(Token.AND);
+          ProcFunc pfAST2 = parseProcFunc();
+          finish(procFuncPos);
+          procFuncAST = new SequencialProcFunc(pfAST, pfAST2, procFuncPos);// **SequencialProcFunc (se toma el nombre inspirados en el command)
+      }                            
+      procFuncAST = pfAST;
+      return procFuncAST;
   }    
   
 // </editor-fold>
