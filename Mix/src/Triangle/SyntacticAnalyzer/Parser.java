@@ -115,7 +115,7 @@ public class Parser {
     if (currentToken.kind == tokenExpected) {
       previousTokenPosition = currentToken.position;
       currentToken = lexicalAnalyser.scan();
-      System.out.println(currentToken);
+      //System.out.println(currentToken);
     } else {
       syntacticError("\"%\" expected hereeeeeee", Token.spell(tokenExpected));//Revisar
     }
