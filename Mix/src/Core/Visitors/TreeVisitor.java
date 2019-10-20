@@ -57,6 +57,9 @@ import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
 import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
 import Triangle.AbstractSyntaxTrees.RecursiveDeclaration;
+import Triangle.AbstractSyntaxTrees.RecursiveFunction;
+import Triangle.AbstractSyntaxTrees.RecursiveProcedure;
+import Triangle.AbstractSyntaxTrees.SequencialProcFunc;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
@@ -193,6 +196,17 @@ public class TreeVisitor implements Visitor {
     public Object visitProcFuncs(ProcFunc ast, Object o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+           
+    public Object visitRecursiveProcedure( RecursiveProcedure ast, Object o) { //// se agrega para la progra
+        return (createTernary("Procedure procFunc",ast.C,ast.FPS,ast.I));     
+    }
+    
+    public Object visitRecursiveFunction(RecursiveFunction ast, Object o) { //// se agrega para la progra
+     return(createQuaternary("Procedure Proc-Func",ast.E, ast.FPS, ast.I, ast.T)); ///
+    }
+    public Object visitSequentialProcFunc(SequencialProcFunc ast, Object o){ //// se agrega para la progra
+        return (createBinary("Sequencial Proc-Func", ast.P1, ast.P2));
+    }
     //</editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc=" Declarations ">
@@ -229,15 +243,15 @@ public class TreeVisitor implements Visitor {
         return(createBinary("Variable Declaration", ast.I, ast.T));
     }
     
-    public Object visitVarInitDeclaration(VarInitDeclaration ast, Object obj) {
+    public Object visitVarInitDeclaration(VarInitDeclaration ast, Object obj) { //// se agrega para la progra
         return(createBinary("Variable Init Declaration", ast.I, ast.E));
     }
     
-    public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object obj) {
+    public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object obj) { //// se agrega para la progra
         return(createUnary("Recursive Declaration", ast.P));
     }
     
-    public Object visitLocalDeclaration(LocalDeclaration ast, Object obj) {
+    public Object visitLocalDeclaration(LocalDeclaration ast, Object obj) { //// se agrega para la progra
         return(createBinary("Local Declaration", ast.D1, ast.D2));
     }
        
@@ -479,6 +493,6 @@ public class TreeVisitor implements Visitor {
         
         return(t);             
     }
-    // </editor-fold>
+    // </editor-fold>  
   
 }

@@ -67,6 +67,9 @@ import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
 import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
 import Triangle.AbstractSyntaxTrees.RecursiveDeclaration;
+import Triangle.AbstractSyntaxTrees.RecursiveFunction;
+import Triangle.AbstractSyntaxTrees.RecursiveProcedure;
+import Triangle.AbstractSyntaxTrees.SequencialProcFunc;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
@@ -576,12 +579,27 @@ public class LayoutVisitor implements Visitor {
 
     @Override
     public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return layoutUnary("Rec.Declaration", ast.P);
     }
 
     @Override
     public Object visitLocalDeclaration(LocalDeclaration ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return layoutBinary("Loc.Declaration", ast.D1, ast.D2);
+    }
+
+    @Override
+    public Object visitRecursiveProcedure(RecursiveProcedure ast, Object o) {
+        return layoutTernary("Proc procFunc", ast.C, ast.FPS,ast.I);
+    }
+
+    @Override
+    public Object visitRecursiveFunction(RecursiveFunction ast, Object o) {
+        return layoutQuaternary("Proc procFunc", ast.E, ast.FPS,ast.I, ast.T);
+    }
+
+    @Override
+    public Object visitSequentialProcFunc(SequencialProcFunc ast, Object o) {
+        return layoutBinary("Sequencial Proc-Func", ast.P1, ast.P2);
     }
 
 }

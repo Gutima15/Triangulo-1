@@ -55,6 +55,9 @@ import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
 import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
 import Triangle.AbstractSyntaxTrees.RecursiveDeclaration;
+import Triangle.AbstractSyntaxTrees.RecursiveFunction;
+import Triangle.AbstractSyntaxTrees.RecursiveProcedure;
+import Triangle.AbstractSyntaxTrees.SequencialProcFunc;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
@@ -339,7 +342,7 @@ public class TableVisitor implements Visitor {
       return(null);
   }
  
-  public Object visitVarInitDeclaration(VarInitDeclaration ast, Object o) {          
+  public Object visitVarInitDeclaration(VarInitDeclaration ast, Object o) {    //// se agrega para la progra      
       try {
       addIdentifier(ast.I.spelling, 
               "KnownAddress", 
@@ -347,24 +350,52 @@ public class TableVisitor implements Visitor {
               ((KnownAddress)ast.entity).address.level, 
               ((KnownAddress)ast.entity).address.displacement, 
               -1);
-      } catch (NullPointerException e) { }
-      
+      } catch (NullPointerException e) { }      
       ast.E.visit(this, null);
       return(null);
   }
-  public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
+  public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) { //// se agrega para la progra
       ast.P.visit(this, null);
       return(null);
     }
 
    
-  public Object visitLocalDeclaration(LocalDeclaration ast, Object o) {
+  public Object visitLocalDeclaration(LocalDeclaration ast, Object o) { //// se agrega para la progra
       ast.D1.visit(this,null);
       ast.D2.visit(this,null);
-      throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      return(null);
     }
   // </editor-fold>
+  
+  // <editor-fold defaultstate="collapsed" desc=" procFunc ">
+  // procFunc
+  
+   //It is necesarry?
+    public Object visitProcFuncs(ProcFunc ast, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+   public Object visitRecursiveProcedure(RecursiveProcedure ast, Object o) {
+        ast.C.visit(this,null);
+        ast.FPS.visit(this,null);
+        ast.I.visit(this,null);
+        return(null);
+    }
 
+    public Object visitRecursiveFunction(RecursiveFunction ast, Object o) {
+        ast.E.visit(this, null);
+        ast.I.visit(this,null);
+        ast.T.visit(this,null);
+        return(null);
+    }
+    public Object visitSequentialProcFunc(SequencialProcFunc ast, Object o){
+        ast.P1.visit(this,null);
+        ast.P2.visit(this,null);
+        return (null);
+        
+    }
+  // </editor-fold>
+    
   // <editor-fold defaultstate="collapsed" desc=" Aggregates ">
   // Array Aggregates
   public Object visitMultipleArrayAggregate(MultipleArrayAggregate ast, Object o) { 
@@ -677,8 +708,7 @@ public class TableVisitor implements Visitor {
     private DefaultTableModel model;
     // </editor-fold>
 
-    @Override
-    public Object visitProcFuncs(ProcFunc ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+   
+
+
 }

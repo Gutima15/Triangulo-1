@@ -44,8 +44,11 @@ public interface Visitor {
   public abstract Object visitVnameExpression(VnameExpression ast, Object o);
   
   // Proc Funcs
-  public abstract Object visitProcFuncs(ProcFunc ast, Object o);
-
+  public abstract Object visitProcFuncs(ProcFunc ast, Object o); //New rule
+  public abstract Object visitRecursiveProcedure(RecursiveProcedure ast, Object o); //New rule
+  public abstract Object visitRecursiveFunction(RecursiveFunction ast, Object o); //New rule
+  public abstract Object visitSequentialProcFunc(SequencialProcFunc ast, Object o); //New rule
+  
   // Declarations
   public abstract Object visitBinaryOperatorDeclaration(BinaryOperatorDeclaration ast, Object o);
   public abstract Object visitConstDeclaration(ConstDeclaration ast, Object o);

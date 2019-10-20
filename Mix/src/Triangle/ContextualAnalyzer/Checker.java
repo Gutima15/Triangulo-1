@@ -90,14 +90,19 @@ import Triangle.AbstractSyntaxTrees.VarInitDeclaration;
 import Triangle.AbstractSyntaxTrees.LocalDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcFunc;
 import Triangle.AbstractSyntaxTrees.RecursiveDeclaration;
+import Triangle.AbstractSyntaxTrees.RecursiveFunction;
+import Triangle.AbstractSyntaxTrees.RecursiveProcedure;
+import Triangle.AbstractSyntaxTrees.SequencialProcFunc;
 import Triangle.AbstractSyntaxTrees.Visitor;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
 import Triangle.AbstractSyntaxTrees.WhileCommand;
 import Triangle.SyntacticAnalyzer.SourcePosition;
 
 public final class Checker implements Visitor {
-
+    
+  // <editor-fold defaultstate="collapsed" desc=" Commands ">
   // Commands
+  // 
 
   // Always returns null. Does not use the given object.
 
@@ -187,7 +192,11 @@ public final class Checker implements Visitor {
   public Object visitForCommand(ForCommand ast, Object o) {//
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+  // </editor-fold>
+  
+ // <editor-fold defaultstate="collapsed" desc=" Expressions ">
   // Expressions
+  // 
 
   // Returns the TypeDenoter denoting the type of the expression. Does
   // not use the given object.
@@ -312,8 +321,11 @@ public final class Checker implements Visitor {
     ast.type = (TypeDenoter) ast.V.visit(this, null);
     return ast.type;
   }
-
-  // Declarations
+ // </editor-fold>
+  
+ // <editor-fold defaultstate="collapsed" desc=" Declarations ">
+  // Declarations  
+// 
 
   // Always returns null. Does not use the given object.
   public Object visitBinaryOperatorDeclaration(BinaryOperatorDeclaration ast, Object o) {
@@ -407,7 +419,9 @@ public final class Checker implements Visitor {
     
     return null;
   }
-
+ // </editor-fold>
+  
+// <editor-fold defaultstate="collapsed" desc=" Array Aggregates "> 
   // Array Aggregates
 
   // Returns the TypeDenoter for the Array Aggregate. Does not use the
@@ -449,8 +463,11 @@ public final class Checker implements Visitor {
     ast.type = new SingleFieldTypeDenoter(ast.I, eType, ast.position);
     return ast.type;
   }
-
-  // Formal Parameters
+ // </editor-fold>
+  
+// <editor-fold defaultstate="collapsed" desc=" Formal Parameters "> 
+// Formal Parameters
+  // 
 
   // Always returns null. Does not use the given object.
 
@@ -509,8 +526,11 @@ public final class Checker implements Visitor {
     ast.FP.visit(this, null);
     return null;
   }
-
-  // Actual Parameters
+ // </editor-fold>
+  
+// <editor-fold defaultstate="collapsed" desc=" Actual Parameters "> 
+// Actual Parameters
+  // 
 
   // Always returns null. Uses the given FormalParameter.
 
@@ -629,8 +649,10 @@ public final class Checker implements Visitor {
     }
     return null;
   }
-
-  // Type Denoters
+ // </editor-fold>
+  
+// <editor-fold defaultstate="collapsed" desc=" Type Denoters "> 
+// Type Denoters  
 
   // Returns the expanded version of the TypeDenoter. Does not
   // use the given object.
@@ -690,8 +712,11 @@ public final class Checker implements Visitor {
     ast.T = (TypeDenoter) ast.T.visit(this, null);
     return ast;
   }
+ // </editor-fold>
+  
+// <editor-fold defaultstate="collapsed" desc=" Literals, Identifiers and Operators "> 
+// Literals, Identifiers and Operators
 
-  // Literals, Identifiers and Operators
   public Object visitCharacterLiteral(CharacterLiteral CL, Object o) {
     return StdEnvironment.charType;
   }
@@ -713,8 +738,10 @@ public final class Checker implements Visitor {
       O.decl = binding;
     return binding;
   }
+// </editor-fold>
 
-  // Value-or-variable names
+// <editor-fold defaultstate="collapsed" desc=" Value-or-variable names "> 
+// Value-or-variable names
 
   // Determines the address of a named object (constant or variable).
   // This consists of a base object, to which 0 or more field-selection
@@ -791,6 +818,8 @@ public final class Checker implements Visitor {
     }
     return ast.type;
   }
+// </editor-fold>
+  
 
   // Programs
 
@@ -996,6 +1025,21 @@ public final class Checker implements Visitor {
 
     @Override
     public Object visitProcFuncs(ProcFunc ast, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitRecursiveProcedure(RecursiveProcedure ast, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitRecursiveFunction(RecursiveFunction ast, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitSequentialProcFunc(SequencialProcFunc ast, Object o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

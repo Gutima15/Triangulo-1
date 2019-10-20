@@ -20,11 +20,11 @@ public class LocalDeclaration extends Declaration {
 
   
 
-    public LocalDeclaration(Declaration dAST, Declaration dAST2, Declaration dAST3, SourcePosition declarationPos) {
+    public LocalDeclaration(Declaration dAST, Declaration dAST2, SourcePosition declarationPos) {
         super (declarationPos);
         D1 = dAST;
         D2 = dAST2;
-        D3 = dAST3;
+
     }
 
   public Object visit(Visitor v, Object o) {
@@ -32,5 +32,5 @@ public class LocalDeclaration extends Declaration {
   }  
   public Declaration D1;
   public Declaration D2;
-  public Declaration D3;
+
 }
