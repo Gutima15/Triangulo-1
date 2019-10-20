@@ -787,8 +787,7 @@ public class Parser {
             finish(declarationPos);
             declarationAST = new VarDeclaration(iAST, tAST, declarationPos);           
         }else if (currentToken.kind==Token.INIT){
-            acceptIt();
-            System.out.println(" Entré a init ");
+            acceptIt();           
             Expression eAST = parseExpression();
             finish(declarationPos);
             declarationAST = new VarInitDeclaration(iAST, eAST, declarationPos);
