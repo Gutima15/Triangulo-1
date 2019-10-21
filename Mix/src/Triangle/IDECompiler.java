@@ -13,6 +13,7 @@ import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.SyntacticAnalyzer.Parser;
 import Triangle.ContextualAnalyzer.Checker;
 import Triangle.CodeGenerator.Encoder;
+import Triangle.TreeWriterHTML.Writer;
 
 
 
@@ -75,7 +76,10 @@ public class IDECompiler {
             scanner.finishWriting();
         }else{
             System.out.println("Compilation was unsuccessful.");
-        }   
+        }
+        
+        Writer w = new Writer("astTree.xml");
+        w.write(getAST());
         return(success);
     }
       
