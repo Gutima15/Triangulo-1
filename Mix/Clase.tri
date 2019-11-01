@@ -1,0 +1,3 @@
+let const b ~ 10; var i:Integer
+in i:= i*b
+end

@@ -139,13 +139,13 @@ public final class Encoder implements Visitor {
     patch(jumpAddr, nextInstrAddr);
     return null;
   }
-
+//Dato importante los proc y los func no ocupan memoria de datos pero si de codigo
   public Object visitLetCommand(LetCommand ast, Object o) {
     Frame frame = (Frame) o;
-    int extraSize = ((Integer) ast.D.visit(this, frame)).intValue();
+    int extraSize = ((Integer) ast.D.visit(this, frame)).intValue(); // Esto es lo que entendemos como "S" en la presentación
     ast.C.visit(this, new Frame(frame, extraSize));
-    if (extraSize > 0)
-      emit(Machine.POPop, 0, 0, extraSize);
+    if (extraSize > 0) 
+      emit(Machine.POPop, 0, 0, extraSize); // con esto dejamos la pila como la encontramos (por ende, devolvermos las palabras asignadas en elaborate)
     return null;
   }
 
@@ -163,7 +163,7 @@ public final class Encoder implements Visitor {
     emit(Machine.JUMPop, 0, Machine.CBr, 0);
     loopAddr = nextInstrAddr;
     ast.C.visit(this, frame);
-    patch(jumpAddr, nextInstrAddr);
+    patch(jumpAddr, nextInstrAddr); 
     ast.E.visit(this, frame);
     emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr);
     return null;
