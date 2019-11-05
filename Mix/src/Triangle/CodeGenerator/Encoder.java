@@ -350,12 +350,15 @@ public final class Encoder implements Visitor {
     Frame frame = (Frame) o;
     int extraSize1, extraSize2;
 
-    extraSize1 = ((Integer) ast.D1.visit(this, frame)).intValue();
-    Frame frame1 = new Frame (frame, extraSize1);
+    extraSize1 = ((Integer) ast.D1.visit(this, frame)).intValue();// genere las instrucciones de la primera declaración
+    //relaticas al fremea donde estoy en el D1, esto devuelve una cantidad de palabras de memoria que creció la pila
+    //dada la ejecución de esa declaración.
+    Frame frame1 = new Frame (frame, extraSize1); //se crea un nuevo marco donde se toma en cuenta el anidamiento que lleva
+    //y crece en las palabras que se aportó, es decir se registra la actualización del tamaño
     extraSize2 = ((Integer) ast.D2.visit(this, frame1)).intValue();
     return new Integer(extraSize1 + extraSize2);
   }
-
+//execute procedimiento, //evaluate Función
   public Object visitTypeDeclaration(TypeDeclaration ast, Object o) {
     // just to ensure the type's representation is decided
     ast.T.visit(this, null);

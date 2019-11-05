@@ -453,8 +453,8 @@ public class Interpreter {
       d = currentInstr.d;
       // Execute instruction ...
       switch (op) {
-        case Machine.LOADop:
-          addr = d + content(r);
+        case Machine.LOADop: //hace que se agrande la pila, mueve de donde se declaran las variables al top
+          addr = d + content(r); 
           checkSpace(n);
           for (index = 0; index < n; index++)
             data[ST + index] = data[addr + index];
