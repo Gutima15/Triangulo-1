@@ -12,8 +12,11 @@
  * of the authors.
  */
 
-package Triangle.ContextualAnalyzer;
+ //<editor-fold defaultstate="collapsed" desc=" Notas de clase ">
+// NOTAS de Clase
+// </editor-fold>
 
+package Triangle.ContextualAnalyzer;
 import Triangle.ErrorReporter;
 import Triangle.StdEnvironment;
 import Triangle.AbstractSyntaxTrees.AnyTypeDenoter;

@@ -12,8 +12,11 @@
  * of the authors.
  */
 
-package Triangle.SyntacticAnalyzer;
+ //<editor-fold defaultstate="collapsed" desc=" Notas de clase ">
+// NOTAS de Clase
+// </editor-fold>
 
+package Triangle.SyntacticAnalyzer;
 import Triangle.ErrorReporter;
 import Triangle.AbstractSyntaxTrees.ActualParameter;
 import Triangle.AbstractSyntaxTrees.ActualParameterSequence;
@@ -124,7 +127,7 @@ public class Parser {
   void acceptIt() {
     previousTokenPosition = currentToken.position;
     currentToken = lexicalAnalyser.scan();
-  }
+  }//Skip es empty command
 
 // start records the position of the start of a phrase.
 // This is defined to be the position of the first
@@ -326,7 +329,10 @@ public class Parser {
             }//
             break;//
             case Token.FOR: //|"loop" "for" Identifier "~"Expression "to" Expression "do" Command "repeat"
-            {//
+            {// la expresión 1 se evalua una sola vez antes de comenzar a itera, el valor de la expreción 1 es el inicial
+              // del indentiricador, Si el valor inicial supera al de la segunda expresión, no se ejecuta ninguna vez el comando
+              // solo se evaluan únicamente las expresiones una vez y el identificador tiene que estar dentro del rango osea <=
+              // además, el identificador requiere espacio en memoria.
                 acceptIt();//
                 Identifier iAST = parseIdentifier();
                 accept(Token.IS);
