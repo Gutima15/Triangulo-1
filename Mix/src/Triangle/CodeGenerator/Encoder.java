@@ -12,6 +12,13 @@
  * of the authors.
  */
 
+ //<editor-fold defaultstate="collapsed" desc=" Notas de clase ">
+// NOTAS de Clase
+//En caso de haecr un jumpIf, se consume un valor de a pila
+//call succ lo que está en el top de la pila.
+
+// </editor-fold>
+
 package Triangle.CodeGenerator;
 
 import java.io.DataOutputStream;
