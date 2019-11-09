@@ -41,6 +41,7 @@ import Triangle.AbstractSyntaxTrees.EmptyExpression;
 import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.ErrorTypeDenoter;
 import Triangle.AbstractSyntaxTrees.ForCommand;
+import Triangle.AbstractSyntaxTrees.ForDeclaration;
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
 import Triangle.AbstractSyntaxTrees.FuncDeclaration;
 import Triangle.AbstractSyntaxTrees.FuncFormalParameter;
@@ -121,7 +122,7 @@ public class LayoutVisitor implements Visitor {
   }
   
   public Object visitForCommand(ForCommand ast, Object obj) {
-    return layoutQuaternary("ForCom.", ast.I1, ast.E1, ast.E2,ast.C1);
+    return layoutTernary("ForCom.", ast.FD, ast.E2,ast.C1);
   }
   
   public Object visitLetCommand(LetCommand ast, Object obj) {
@@ -229,6 +230,10 @@ public class LayoutVisitor implements Visitor {
 
   public Object visitVarInitDeclaration(VarInitDeclaration ast, Object obj) {
     return layoutBinary("VarInitDecl.", ast.I, ast.E);
+  }
+  
+  public Object visitForDeclaration(ForDeclaration ast, Object obj){
+      return layoutBinary ( "ForDec.",ast.I,ast.E);
   }
 
   // Array Aggregates

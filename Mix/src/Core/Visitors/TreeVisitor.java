@@ -31,6 +31,7 @@ import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.ErrorTypeDenoter;
 import Triangle.AbstractSyntaxTrees.Expression;
 import Triangle.AbstractSyntaxTrees.ForCommand;
+import Triangle.AbstractSyntaxTrees.ForDeclaration;
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
 import Triangle.AbstractSyntaxTrees.FuncDeclaration;
 import Triangle.AbstractSyntaxTrees.FuncFormalParameter;
@@ -118,7 +119,7 @@ public class TreeVisitor implements Visitor {
     }
     
     public Object visitForCommand(ForCommand ast, Object obj) {              // Se annade el visit al nuevo comando for
-        return(createQuaternary("For Command", ast.I1, ast.E1, ast.E2, ast.C1));
+        return(createTernary("For Command", ast.FD, ast.E2, ast.C1));
     }
     
     public Object visitLetCommand(LetCommand ast, Object obj) {
@@ -254,7 +255,10 @@ public class TreeVisitor implements Visitor {
     public Object visitLocalDeclaration(LocalDeclaration ast, Object obj) { //// se agrega para la progra
         return(createBinary("Local Declaration", ast.D1, ast.D2));
     }
-       
+    
+    public Object visitForDeclaration (ForDeclaration ast, Object obj){ // se agrega para la progra
+        return(createBinary("For Declaration", ast.I,ast.E));
+    }
     // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc=" Aggregates ">
