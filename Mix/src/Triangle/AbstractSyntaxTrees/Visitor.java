@@ -63,7 +63,8 @@ public interface Visitor {
   
   //New declarations
   public abstract Object visitVarInitDeclaration(VarInitDeclaration ast, Object o);
-  
+  public abstract Object visitForDeclaration(ForDeclaration ast, Object o);
+
   
   
 
