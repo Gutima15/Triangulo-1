@@ -169,8 +169,8 @@ public final class Checker implements Visitor {
     ast.C.visit(this, null);
     return null;
   }
-  public Object visitUntilCommand(UntilCommand ast, Object o) {  // Se agrega el mï¿½todo visitUntilCommand donde
-    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null); /// Nos aseguramos que siempre reciba una expresiï¿½n booleana
+  public Object visitUntilCommand(UntilCommand ast, Object o) {  // Se agrega el método visitUntilCommand donde
+    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null); /// Nos aseguramos que siempre reciba una expresión de tipo Boolean
     if (! eType.equals(StdEnvironment.booleanType)) //
       reporter.reportError("Boolean expression expected here", "", ast.E.position); //
     ast.C.visit(this, null); // 
@@ -185,7 +185,7 @@ public final class Checker implements Visitor {
     return null;///
   }
   
-  public Object visitDoWhileCommand(DoWhileCommand ast, Object o){ // Se agrega el mï¿½todo visitDoWhileCommand
+  public Object visitDoWhileCommand(DoWhileCommand ast, Object o){ // Se agrega el metodo visitDoWhileCommand
     TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null); /// Nos aseguramos que siempre reciba una expresiï¿½n booleana
     if (! eType.equals(StdEnvironment.booleanType)) //
       reporter.reportError("Boolean expression expected here", "", ast.E.position); //
@@ -784,12 +784,14 @@ public final class Checker implements Visitor {
     ast.variable = false;
     ast.type = StdEnvironment.errorType;
     Declaration binding = (Declaration) ast.I.visit(this, null);
-    if (binding == null)
-      reportUndeclared(ast.I);
-    else
-      if (binding instanceof ConstDeclaration) {
+    if (binding == null)  //Note que con esta condición, nos aseguramos de que el Vname tenga un identificador asociado
+      reportUndeclared(ast.I); //En caso de no tenerlo, lo reportamos.
+    else // Es decir en este ambiente, ya la variable está declarada.
+      if (binding instanceof ConstDeclaration) {          
         ast.type = ((ConstDeclaration) binding).E.type;
         ast.variable = false;
+      } else if(binding instanceof VarInitDeclaration){ // Se agrega un tipo nuevo para los VName, estas pueden ser
+          ast.type =((VarInitDeclaration) binding).E.type;  // VarInitDeclaration de ahora en adelante.
       } else if (binding instanceof VarDeclaration) {
         ast.type = ((VarDeclaration) binding).T;
         ast.variable = true;

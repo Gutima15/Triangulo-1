@@ -24,6 +24,7 @@ import Triangle.AbstractSyntaxTrees.EmptyExpression;
 import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.ErrorTypeDenoter;
 import Triangle.AbstractSyntaxTrees.ForCommand;
+import Triangle.AbstractSyntaxTrees.ForDeclaration;
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
 import Triangle.AbstractSyntaxTrees.FuncDeclaration;
 import Triangle.AbstractSyntaxTrees.FuncFormalParameter;
@@ -615,10 +616,9 @@ public class WriterVisitor implements Visitor {
     }
 
     @Override
-    public Object visitForCommand(ForCommand ast, Object o) {
+    public Object visitForCommand(ForCommand ast, Object o) { //se hace ternario
         writeLineHTML("<ForCommand>");
-        ast.I1.visit(this, null);
-        ast.E1.visit(this, null);
+        ast.FD.visit(this, null);
         ast.E2.visit(this, null);
         ast.C1.visit(this, null);
         writeLineHTML("</ForCommand>");
@@ -655,6 +655,14 @@ public class WriterVisitor implements Visitor {
         ast.E.visit(this, null);
         writeLineHTML("</VarInitDeclaration>");
         return null;     
+    }
+    
+    public Object visitForDeclaration(ForDeclaration ast, Object o){
+        writeLineHTML("<ForDeclaration>");
+        ast.I.visit(this, null);
+        ast.E.visit(this, null);
+        writeLineHTML("</ForDeclaration>");
+        return null;
     }
 
     @Override

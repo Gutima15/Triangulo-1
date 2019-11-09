@@ -43,6 +43,7 @@ import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.Expression;
 import Triangle.AbstractSyntaxTrees.FieldTypeDenoter;
 import Triangle.AbstractSyntaxTrees.ForCommand;
+import Triangle.AbstractSyntaxTrees.ForDeclaration;
 import Triangle.AbstractSyntaxTrees.FormalParameter;
 import Triangle.AbstractSyntaxTrees.FormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
@@ -334,17 +335,14 @@ public class Parser {
               // solo se evaluan únicamente las expresiones una vez y el identificador tiene que estar dentro del rango osea <=
               // además, el identificador requiere espacio en memoria.
                 acceptIt();//
-                Identifier iAST = parseIdentifier();
-                accept(Token.IS);
-                Expression eAST= parseExpression();
+                ForDeclaration fAST = parseForDeclaration();                
                 accept(Token.TO);
                 Expression eAST2= parseExpression();
                 accept(Token.DO);
                 Command cAST = parseCommand();//
                 accept(Token.REPEAT);
                 finish(commandPos); //
-                commandAST = new ForCommand(iAST,eAST,eAST2,cAST,commandPos);// Falta implementar
-                
+                commandAST = new ForCommand(fAST,eAST2,cAST,commandPos);
             }
             break;    //
             
@@ -852,9 +850,21 @@ public class Parser {
         currentToken.spelling);
       break;
 
-    }
+    }    
     return declarationAST;
   }
+   
+ ForDeclaration parseForDeclaration()throws SyntaxError {
+    ForDeclaration declarationAST = null; // in case there's a syntactic error
+    SourcePosition declarationPos = new SourcePosition();
+    start(declarationPos); 
+    Identifier iAST = parseIdentifier();
+    accept(Token.IS);
+    Expression eAST= parseExpression();
+    declarationAST =new ForDeclaration(iAST,eAST,declarationPos);
+    finish(declarationPos);
+    return declarationAST;   
+ }
 // </editor-fold>
   
 // <editor-fold defaultstate="collapsed" desc=" PARAMETERS ">
