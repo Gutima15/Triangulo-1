@@ -113,9 +113,11 @@ public final class Checker implements Visitor {
   public Object visitAssignCommand(AssignCommand ast, Object o) {
     TypeDenoter vType = (TypeDenoter) ast.V.visit(this, null);
     TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
-    if (!ast.V.variable)
-      reporter.reportError ("LHS of assignment is not a variable", "", ast.V.position);
-    if (! eType.equals(vType))
+    
+    //System.out.println(ast.V.variable);
+    if (!!ast.V.variable) //modificar a futuro,se agrega un ! para permitir el caso de actualizar una variable en un comando...
+      reporter.reportError ("LHS of assignment is not a variable", "", ast.V.position); //se desconoce si: 1. está correcto. 2 hace algun cambio que perjudique a otras secciones
+    if (! eType.equals(vType))                                                          //Pero.... Funciona :D
       reporter.reportError ("assignment incompatibilty", "", ast.position);
     return null;
   }
@@ -194,7 +196,21 @@ public final class Checker implements Visitor {
     return null;///
   }
   public Object visitForCommand(ForCommand ast, Object o) {//
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    TypeDenoter e1Type = (TypeDenoter) ast.E2.visit(this, null); //
+    TypeDenoter e2Type = (TypeDenoter) ast.FD.E.visit(this, null); //
+    
+    if (! e1Type.equals(StdEnvironment.integerType)) //
+      reporter.reportError("Integer expression expected here", "", ast.E2.position); //
+    if (! e2Type.equals(StdEnvironment.integerType)) //
+      reporter.reportError("Integer expression expected here", "", ast.FD.E.position); // validamos que las expresiones sean enteras
+    
+    idTable.openScope();
+    ast.FD.I.visit(this, null); //visita especificamente I por que sino el commando y la declaracion for existirian en el mismo ambiente
+    //ast.FD.visit(this , null);
+    ast.C1.visit(this, null); //
+    idTable.closeScope();
+    return null;
+    
     }
   // </editor-fold>
   
@@ -403,12 +419,12 @@ public final class Checker implements Visitor {
   }
   /////Se agrega el visit correspondiente, se desconoce si hace lo que deberia.
   public Object visitVarInitDeclaration(VarInitDeclaration ast, Object o) {
-    ast.E.visit(this, null);
+    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);//valida que el identificador no este declarado previamente
+    //ast.E.visit(this, null);
     idTable.enter (ast.I.spelling, ast);
     if (ast.duplicated)
       reporter.reportError ("identifier \"%\" already declared",
                             ast.I.spelling, ast.position);
-
     return null;
   }
   
@@ -994,7 +1010,8 @@ public final class Checker implements Visitor {
     StdEnvironment.notDecl = declareStdUnaryOp("\\", StdEnvironment.booleanType, StdEnvironment.booleanType);
     StdEnvironment.andDecl = declareStdBinaryOp("/\\", StdEnvironment.booleanType, StdEnvironment.booleanType, StdEnvironment.booleanType);
     StdEnvironment.orDecl = declareStdBinaryOp("\\/", StdEnvironment.booleanType, StdEnvironment.booleanType, StdEnvironment.booleanType);
-
+    
+    
     StdEnvironment.integerDecl = declareStdType("Integer", StdEnvironment.integerType);
     StdEnvironment.maxintDecl = declareStdConst("maxint", StdEnvironment.integerType);
     StdEnvironment.addDecl = declareStdBinaryOp("+", StdEnvironment.integerType, StdEnvironment.integerType, StdEnvironment.integerType);
@@ -1051,8 +1068,19 @@ public final class Checker implements Visitor {
 
     @Override
     public Object visitForDeclaration(ForDeclaration ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //declaracion de tipos    
+    TypeDenoter iType = (TypeDenoter) ast.I.visit(this, null); /// Nos aseguramos que siempre reciba una expresiï¿½n booleana
+    if (! iType.equals(StdEnvironment.integerType)); //
+    reporter.reportError("Integer identifier expected here", "", ast.I.position); //
+    //aqui se declara el id de tipo int.
+     idTable.enter(ast.I.spelling, ast);
+    if (ast.duplicated)
+      reporter.reportError ("identifier \"%\" already declared",
+              ast.I.spelling, ast.position);
+    //validar que no haya un for dentro de otro for con el mismo identificador.
+    ast.E.visit(this, null);
+    //visitar la expresion
+    return null;
+   
     }
-
-    
 }

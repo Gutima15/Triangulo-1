@@ -55,9 +55,9 @@ public class IDECompiler {
         
         rootAST = parser.parseProgram();
         if (report.numErrors == 0) {
-            //System.out.println("Contextual Analysis ...");//Comentar para que funcione el sint�ctico solo
-            //Checker checker = new Checker(report);        //Comentar para que funcione el sint�ctico solo
-            //checker.check(rootAST);                       //Comentar para que funcione el sint�ctico solo
+            System.out.println("Contextual Analysis ...");//Comentar para que funcione el sint�ctico solo
+            Checker checker = new Checker(report);        //Comentar para que funcione el sint�ctico solo
+            checker.check(rootAST);                       //Comentar para que funcione el sint�ctico solo
             if (report.numErrors == 0) {
               //  System.out.println("Code Generation ...");//Comentar para que funcione el sint�ctico solo
 //                Encoder encoder = new Encoder(report);    //Comentar para que funcione el sint�ctico solo
