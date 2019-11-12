@@ -115,9 +115,10 @@ public final class Checker implements Visitor {
     TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
     
     //System.out.println(ast.V.variable);
-    if (!!ast.V.variable) //modificar a futuro,se agrega un ! para permitir el caso de actualizar una variable en un comando...
-      reporter.reportError ("LHS of assignment is not a variable", "", ast.V.position); //se desconoce si: 1. está correcto. 2 hace algun cambio que perjudique a otras secciones
-    if (! eType.equals(vType))                                                          //Pero.... Funciona :D
+    //Falta arreglar el problema LHS pues no sabemos porqué lo tira.
+    if (!ast.V.variable) 
+      reporter.reportError ("LHS of assignment is not a variable", "", ast.V.position); 
+    if (! eType.equals(vType))                                                          
       reporter.reportError ("assignment incompatibilty", "", ast.position);
     return null;
   }
