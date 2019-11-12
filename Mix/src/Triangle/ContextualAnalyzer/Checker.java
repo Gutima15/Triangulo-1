@@ -115,7 +115,7 @@ public final class Checker implements Visitor {
     TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
     
     //System.out.println(ast.V.variable);
-    //Falta arreglar el problema LHS pues no sabemos porqué lo tira.
+    //Falta arreglar el problema LHS pues no sabemos porquï¿½ lo tira.
     if (!ast.V.variable) 
       reporter.reportError ("LHS of assignment is not a variable", "", ast.V.position); 
     if (! eType.equals(vType))                                                          
@@ -173,8 +173,8 @@ public final class Checker implements Visitor {
     ast.C.visit(this, null);
     return null;
   }
-  public Object visitUntilCommand(UntilCommand ast, Object o) {  // Se agrega el método visitUntilCommand donde
-    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null); /// Nos aseguramos que siempre reciba una expresión de tipo Boolean
+  public Object visitUntilCommand(UntilCommand ast, Object o) {  // Se agrega el mï¿½todo visitUntilCommand donde
+    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null); /// Nos aseguramos que siempre reciba una expresiï¿½n de tipo Boolean
     if (! eType.equals(StdEnvironment.booleanType)) //
       reporter.reportError("Boolean expression expected here", "", ast.E.position); //
     ast.C.visit(this, null); // 
@@ -435,11 +435,18 @@ public final class Checker implements Visitor {
     return null;
   }
   
-    /////Se agrega el visit correspondiente, se desconoce si hace lo que deberia.
+ //Modificaciones hechas por @StephanieDelgago.
   public Object visitLocalDeclaration(LocalDeclaration ast, Object o) {
     
+    IdentificationTable snap = new IdentificationTable(idTable);// Se crea una tabla instantanea con el idTable.
+    ast.D1.visit(this, null);// Lee el primer D1 y verifica que use el bloque local.
+    snap.startLocalReading(idTable);//Llama al procedimiento starLocalReading para almacenar la tabla local que esta para leer.
+    idTable = snap;// Asigna a idTable la tabla snap volviendola como tabla principal.
+    ast.D2.visit(this,null);// Lee la segunda D2 y verifica que use el bloque local.
+    idTable.stopLocalReading();//Descarta el bloque local y continua.
     return null;
   }
+
  // </editor-fold>
   
 // <editor-fold defaultstate="collapsed" desc=" Array Aggregates "> 
@@ -802,9 +809,9 @@ public final class Checker implements Visitor {
     ast.variable = false;
     ast.type = StdEnvironment.errorType;
     Declaration binding = (Declaration) ast.I.visit(this, null);
-    if (binding == null)  //Note que con esta condición, nos aseguramos de que el Vname tenga un identificador asociado
+    if (binding == null)  //Note que con esta condiciï¿½n, nos aseguramos de que el Vname tenga un identificador asociado
       reportUndeclared(ast.I); //En caso de no tenerlo, lo reportamos.
-    else // Es decir en este ambiente, ya la variable está declarada.
+    else // Es decir en este ambiente, ya la variable estï¿½ declarada.
       if (binding instanceof ConstDeclaration) {          
         ast.type = ((ConstDeclaration) binding).E.type;
         ast.variable = false;

@@ -330,10 +330,10 @@ public class Parser {
             }//
             break;//
             case Token.FOR: //|"loop" "for" Identifier "~"Expression "to" Expression "do" Command "repeat"
-            {// la expresión 1 se evalua una sola vez antes de comenzar a itera, el valor de la expreción 1 es el inicial
-              // del indentiricador, Si el valor inicial supera al de la segunda expresión, no se ejecuta ninguna vez el comando
-              // solo se evaluan únicamente las expresiones una vez y el identificador tiene que estar dentro del rango osea <=
-              // además, el identificador requiere espacio en memoria.
+            {// la expresin 1 se evalua una sola vez antes de comenzar a itera, el valor de la exprecin 1 es el inicial
+              // del indentiricador, Si el valor inicial supera al de la segunda expresin, no se ejecuta ninguna vez el comando
+              // solo se evaluan nicamente las expresiones una vez y el identificador tiene que estar dentro del rango osea <=
+              // adems, el identificador requiere espacio en memoria.
                 acceptIt();//
                 ForDeclaration fAST = parseForDeclaration();                
                 accept(Token.TO);

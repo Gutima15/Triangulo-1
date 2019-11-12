@@ -20,10 +20,16 @@ public final class IdentificationTable {
 
   private int level;
   private IdEntry latest;
+  private IdentificationTable localEntries;
+  private boolean localReading; 
 
   public IdentificationTable () {
     level = 0;
     latest = null;
+  }
+
+  public IdentificationTable (IdentificationTable main) {
+    localEntries = main.localEntries;
   }
 
   // Opens a new level in the identification table, 1 higher than the
@@ -49,6 +55,18 @@ public final class IdentificationTable {
     }
     this.level--;
     this.latest = entry;
+  }
+
+// Modificaciones hechas por @StephanieDelgago.
+  public void startLocalReading(IdentificationTable localTable){
+    this.localEntries= localTable; //Se asigna a localEntries el contenido de la tabla.
+    this.localReading= true; //true Informa que se esta leyendo.
+  }
+
+ //Modificaciones hechas por @StephanieDelgago.
+  public void stopLocalReading(){
+    this.localEntries= null;// No se asigna nada a localEntries.
+    this.localReading= false;// false informa que no se está leyendo.
   }
 
   // Makes a new entry in the identification table for the given identifier
