@@ -173,6 +173,7 @@ public final class Checker implements Visitor {
     ast.C.visit(this, null);
     return null;
   }
+  //Modificaciones hechas por @Jorge Gutiérrez
   public Object visitUntilCommand(UntilCommand ast, Object o) {  // Se agrega el método visitUntilCommand donde
     TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null); /// Nos aseguramos que siempre reciba una expresión de tipo Boolean
     if (! eType.equals(StdEnvironment.booleanType)) //
@@ -180,25 +181,26 @@ public final class Checker implements Visitor {
     ast.C.visit(this, null); // 
     return null;///
   }
-  
-  public Object visitDoUntilCommand(DoUntilCommand ast, Object o){ // Se agrega el mï¿½todo visitDoUntilCommand
-    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null); /// Nos aseguramos que siempre reciba una expresiï¿½n booleana
+  //Modificaciones hechas por @Jorge Gutiérrez 
+  public Object visitDoUntilCommand(DoUntilCommand ast, Object o){ // Se agrega el método visitDoUntilCommand
+    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null); /// Nos aseguramos que siempre reciba una expresión booleana
     if (! eType.equals(StdEnvironment.booleanType)) //
       reporter.reportError("Boolean expression expected here", "", ast.E.position); //
     ast.C.visit(this, null); // 
     return null;///
   }
-  
-  public Object visitDoWhileCommand(DoWhileCommand ast, Object o){ // Se agrega el metodo visitDoWhileCommand
-    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null); /// Nos aseguramos que siempre reciba una expresiï¿½n booleana
+  //Modificaciones hechas por @Jorge Gutiérrez 
+  public Object visitDoWhileCommand(DoWhileCommand ast, Object o){ // Se agrega el método visitDoWhileCommand
+    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null); /// Nos aseguramos que siempre reciba una expresión booleana
     if (! eType.equals(StdEnvironment.booleanType)) //
       reporter.reportError("Boolean expression expected here", "", ast.E.position); //
     ast.C.visit(this, null); // 
     return null;///
   }
+  //Modificaciones hechas por @Jorge Gutiérrez & @LerySanchez
   public Object visitForCommand(ForCommand ast, Object o) {//
     TypeDenoter e1Type = (TypeDenoter) ast.E2.visit(this, null); //
-    TypeDenoter e2Type = (TypeDenoter) ast.FD.E.visit(this, null); //
+    TypeDenoter e2Type = (TypeDenoter) ast.FD.E.visit(this, null); // Aquí accedemos propiamente a la expresión que existe dentro de la declaración For
     
     if (! e1Type.equals(StdEnvironment.integerType)) //
       reporter.reportError("Integer expression expected here", "", ast.E2.position); //
@@ -206,7 +208,7 @@ public final class Checker implements Visitor {
       reporter.reportError("Integer expression expected here", "", ast.FD.E.position); // validamos que las expresiones sean enteras
     
     idTable.openScope();
-    ast.FD.I.visit(this, null); //visita especificamente I por que sino el commando y la declaracion for existirian en el mismo ambiente
+    ast.FD.I.visit(this, null); //visita especificamente I por que sino el comando y la declaracion for existirian en el mismo ambiente
     //ast.FD.visit(this , null);
     ast.C1.visit(this, null); //
     idTable.closeScope();
@@ -418,12 +420,11 @@ public final class Checker implements Visitor {
 
     return null;
   }
-  /////Se agrega el visit correspondiente, se desconoce si hace lo que deberia.
+ //Modificaciones hechas por @Jorge Gutiérrez & @LerySanchez
   public Object visitVarInitDeclaration(VarInitDeclaration ast, Object o) {
-    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);//valida que el identificador no este declarado previamente
-    //ast.E.visit(this, null);
+    TypeDenoter etype = (TypeDenoter) ast.E.visit(this, null);//lo importante e visitar la expresión
     idTable.enter (ast.I.spelling, ast);
-    if (ast.duplicated)
+    if (ast.duplicated)//valida que el identificador no este declarado previamente
       reporter.reportError ("identifier \"%\" already declared",
                             ast.I.spelling, ast.position);
     return null;
@@ -797,7 +798,7 @@ public final class Checker implements Visitor {
     }
     return ast.type;
   }
-
+//Modificaciones hechas por @Jorge Gutiérrez & @Lery Sanchez
   public Object visitSimpleVname(SimpleVname ast, Object o) {
     ast.variable = false;
     ast.type = StdEnvironment.errorType;
@@ -810,6 +811,7 @@ public final class Checker implements Visitor {
         ast.variable = false;
       } else if(binding instanceof VarInitDeclaration){ // Se agrega un tipo nuevo para los VName, estas pueden ser
           ast.type =((VarInitDeclaration) binding).E.type;  // VarInitDeclaration de ahora en adelante.
+          ast.variable=true;   //Permitimos que el identificador sea visto como variable, es decir, que puede ser pasado como referencia y destino de una asignación.
       } else if (binding instanceof VarDeclaration) {
         ast.type = ((VarDeclaration) binding).T;
         ast.variable = true;
