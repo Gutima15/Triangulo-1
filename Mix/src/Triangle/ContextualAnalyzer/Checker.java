@@ -436,15 +436,20 @@ public final class Checker implements Visitor {
     return null;
   }
   
- //Modificaciones hechas por @StephanieDelgago.
+ //Modificaciones hechas por @StephanieDelgago & Jorge G
   public Object visitLocalDeclaration(LocalDeclaration ast, Object o) {
+    idTable.openScope();
     
-    IdentificationTable snap = new IdentificationTable(idTable);// Se crea una tabla instantanea con el idTable.
-    ast.D1.visit(this, null);// Lee el primer D1 y verifica que use el bloque local.
-    snap.startLocalReading(idTable);//Llama al procedimiento starLocalReading para almacenar la tabla local que esta para leer.
-    idTable = snap;// Asigna a idTable la tabla snap volviendola como tabla principal.
+    //IdentificationTable snap = new IdentificationTable(idTable);// Se crea una tabla instantanea con el idTable.    
+    
+    //snap.startLocalReading(idTable);//Llama al procedimiento starLocalReading para almacenar la tabla local que esta para leer.
+    //idTable = snap;// Asigna a idTable la tabla snap volviendola como tabla principal.
+    ast.D1.visit(this, null);// Lee el primer D1 y verifica que use el bloque local.    
+    //idTable.stopLocalReading();//Descarta el bloque local y continua.
+     
     ast.D2.visit(this,null);// Lee la segunda D2 y verifica que use el bloque local.
-    idTable.stopLocalReading();//Descarta el bloque local y continua.
+    
+   idTable.closeScope();
     return null;
   }
 

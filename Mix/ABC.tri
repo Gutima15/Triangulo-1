@@ -1,10 +1,8 @@
-let
-  var top init 1 
+let 
+  local const a~1 in var b init a end
+!  var a init 5;
+!  var b:Integer
 in
-  loop
-  until top < 10
-  do
-    putint(top) ;
-    top := top +1
-  repeat
+!  b:=a+5;
+  putint(b)
 end
