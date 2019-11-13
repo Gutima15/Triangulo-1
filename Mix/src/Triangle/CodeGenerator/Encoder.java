@@ -15,7 +15,7 @@
  //<editor-fold defaultstate="collapsed" desc=" Notas de clase ">
 // NOTAS de Clase
 //En caso de haecr un jumpIf, se consume un valor de a pila
-//call succ lo que está en el top de la pila.
+//call succ lo que est en el top de la pila.
 
 // </editor-fold>
 
@@ -150,7 +150,7 @@ public final class Encoder implements Visitor {
 //Dato importante los proc y los func no ocupan memoria de datos pero si de codigo
   public Object visitLetCommand(LetCommand ast, Object o) {
     Frame frame = (Frame) o;
-    int extraSize = ((Integer) ast.D.visit(this, frame)).intValue(); // Esto es lo que entendemos como "S" en la presentación
+    int extraSize = ((Integer) ast.D.visit(this, frame)).intValue(); // Esto es lo que entendemos como "S" en la presentacin
     ast.C.visit(this, new Frame(frame, extraSize));
     if (extraSize > 0) 
       emit(Machine.POPop, 0, 0, extraSize); // con esto dejamos la pila como la encontramos (por ende, devolvermos las palabras asignadas en elaborate)
@@ -358,15 +358,15 @@ public final class Encoder implements Visitor {
     Frame frame = (Frame) o;
     int extraSize1, extraSize2;
 
-    extraSize1 = ((Integer) ast.D1.visit(this, frame)).intValue();// genere las instrucciones de la primera declaración
-    //relaticas al fremea donde estoy en el D1, esto devuelve una cantidad de palabras de memoria que creció la pila
-    //dada la ejecución de esa declaración.
+    extraSize1 = ((Integer) ast.D1.visit(this, frame)).intValue();// genere las instrucciones de la primera declaracin
+    //relaticas al fremea donde estoy en el D1, esto devuelve una cantidad de palabras de memoria que creci la pila
+    //dada la ejecucin de esa declaracin.
     Frame frame1 = new Frame (frame, extraSize1); //se crea un nuevo marco donde se toma en cuenta el anidamiento que lleva
-    //y crece en las palabras que se aportó, es decir se registra la actualización del tamaño
+    //y crece en las palabras que se aport, es decir se registra la actualizacin del tamao
     extraSize2 = ((Integer) ast.D2.visit(this, frame1)).intValue();
     return new Integer(extraSize1 + extraSize2);
   }
-//execute procedimiento, //evaluate Función
+//execute procedimiento, //evaluate Funcin
   public Object visitTypeDeclaration(TypeDeclaration ast, Object o) {
     // just to ensure the type's representation is decided
     ast.T.visit(this, null);
