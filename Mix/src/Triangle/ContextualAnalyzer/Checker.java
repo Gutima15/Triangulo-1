@@ -430,11 +430,7 @@ public final class Checker implements Visitor {
     return null;
   }
   
-    /////Se agrega el visit correspondiente, se desconoce si hace lo que deberia.
-  public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
-    
-    return null;
-  }
+
   
     /////Se agrega el visit correspondiente, se desconoce si hace lo que deberia.
   public Object visitLocalDeclaration(LocalDeclaration ast, Object o) {
@@ -991,6 +987,65 @@ public final class Checker implements Visitor {
     return binding;
   }
 
+
+    @Override
+    public Object visitProcFuncs(ProcFunc ast, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    
+    @Override
+    public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
+    ast.P.visit(this, null);
+    return null;
+  } 
+    
+    @Override
+    public Object visitRecursiveProcedure(RecursiveProcedure ast, Object o) {
+        idTable.openScope();
+        ast.FPS.visit(this, null); // Formal Parameter
+        ast.C.visit(this, null); // Command
+        idTable.closeScope();
+        return null;
+    }
+
+    @Override
+    public Object visitRecursiveFunction(RecursiveFunction ast, Object o) {
+    idTable.openScope();
+    ast.FPS.visit(this, null);
+    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+    idTable.closeScope();
+    if (ast.T.visit(this,null).equals(eType) == false)
+      reporter.reportError ("Wrong type inside body's function",
+              ast.I.spelling, ast.E.position);
+    return null;    }
+
+    @Override
+    public Object visitSequentialProcFunc(SequencialProcFunc ast, Object o) {
+        ast.P1.visit(this,null);
+        ast.P2.visit(this,null);
+        return null;
+    }
+
+    @Override
+    public Object visitForDeclaration(ForDeclaration ast, Object o) {
+        //declaracion de tipos    
+    TypeDenoter iType = (TypeDenoter) ast.I.visit(this, null); /// Nos aseguramos que siempre reciba una expresi�n booleana
+    if (! iType.equals(StdEnvironment.integerType)); //
+    reporter.reportError("Integer identifier expected", "", ast.I.position); //
+    //aqui se declara el id de tipo int.
+     idTable.enter(ast.I.spelling, ast);
+    if (ast.duplicated)
+      reporter.reportError ("identifier \"%\" is already declared before",
+              ast.I.spelling, ast.position);
+    //validar que no haya un for dentro de otro for con el mismo identificador.
+    ast.E.visit(this, null);
+    //visitar la expresion
+    return null;
+   
+    }
+    
+    
   // Creates small ASTs to represent the standard types.
   // Creates small ASTs to represent "declarations" of standard types,
   // constants, procedures, functions, and operators.
@@ -1048,42 +1103,4 @@ public final class Checker implements Visitor {
     StdEnvironment.unequalDecl = declareStdBinaryOp("\\=", StdEnvironment.anyType, StdEnvironment.anyType, StdEnvironment.booleanType);
 
   }
-
-    @Override
-    public Object visitProcFuncs(ProcFunc ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Object visitRecursiveProcedure(RecursiveProcedure ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Object visitRecursiveFunction(RecursiveFunction ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Object visitSequentialProcFunc(SequencialProcFunc ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Object visitForDeclaration(ForDeclaration ast, Object o) {
-        //declaracion de tipos    
-    TypeDenoter iType = (TypeDenoter) ast.I.visit(this, null); /// Nos aseguramos que siempre reciba una expresi�n booleana
-    if (! iType.equals(StdEnvironment.integerType)); //
-    reporter.reportError("Integer identifier expected here", "", ast.I.position); //
-    //aqui se declara el id de tipo int.
-     idTable.enter(ast.I.spelling, ast);
-    if (ast.duplicated)
-      reporter.reportError ("identifier \"%\" already declared",
-              ast.I.spelling, ast.position);
-    //validar que no haya un for dentro de otro for con el mismo identificador.
-    ast.E.visit(this, null);
-    //visitar la expresion
-    return null;
-   
-    }
 }
