@@ -9,6 +9,7 @@ import Triangle.SyntacticAnalyzer.SourcePosition;
 
 public class SequencialProcFunc extends ProcFunc {
     public ProcFunc P1, P2;
+    
     public SequencialProcFunc (ProcFunc p1AST, ProcFunc p2AST, SourcePosition thePosition) {
     super (thePosition);
     P1 = p1AST;
