@@ -694,7 +694,7 @@ public class Parser {
        return procFuncAST;            
   }
   ProcFunc parseProcFuncs() throws SyntaxError {
-      ProcFunc procFuncAST = null;
+      //ProcFunc procFuncAST = null;
       SourcePosition procFuncPos = new SourcePosition();
       start(procFuncPos);
       ProcFunc pfAST = parseProcFunc();
@@ -702,10 +702,9 @@ public class Parser {
           accept(Token.AND);
           ProcFunc pfAST2 = parseProcFunc();
           finish(procFuncPos);
-          procFuncAST = new SequencialProcFunc(pfAST, pfAST2, procFuncPos);// **SequencialProcFunc (se toma el nombre inspirados en el command)
-      }                            
-      procFuncAST = pfAST;
-      return procFuncAST;
+          pfAST = new SequencialProcFunc(pfAST, pfAST2, procFuncPos);// **SequencialProcFunc (se toma el nombre inspirados en el command)
+      }                                  
+      return pfAST;
   }    
   
 // </editor-fold>

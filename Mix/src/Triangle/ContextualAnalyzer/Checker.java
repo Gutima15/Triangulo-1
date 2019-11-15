@@ -101,9 +101,10 @@ import Triangle.AbstractSyntaxTrees.Visitor;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
 import Triangle.AbstractSyntaxTrees.WhileCommand;
 import Triangle.SyntacticAnalyzer.SourcePosition;
+import java.util.ArrayList; 
 
 public final class Checker implements Visitor {
-    
+  public ArrayList<ProcFunc> listProcFuncs = new ArrayList(); 
   // <editor-fold defaultstate="collapsed" desc=" Commands ">
   // Commands
   // 
@@ -272,6 +273,9 @@ public final class Checker implements Visitor {
     } else if (binding instanceof FuncFormalParameter) {
       ast.APS.visit(this, ((FuncFormalParameter) binding).FPS);
       ast.type = ((FuncFormalParameter) binding).T;
+    } else if (binding instanceof RecursiveFunction) { 
+      ast.APS.visit(this, ((RecursiveFunction) binding).FPS); 
+      ast.type = ((RecursiveFunction) binding).T; 
     } else
       reporter.reportError("\"%\" is not a function identifier",
                            ast.I.spelling, ast.I.position);
@@ -583,7 +587,8 @@ public final class Checker implements Visitor {
     Declaration binding = (Declaration) ast.I.visit(this, null);
     if (binding == null)
       reportUndeclared (ast.I);
-    else if (! (binding instanceof FuncDeclaration ||
+    else if (! (binding instanceof RecursiveFunction || 
+                binding instanceof FuncDeclaration || 
                 binding instanceof FuncFormalParameter))
       reporter.reportError ("\"%\" is not a function identifier",
                             ast.I.spelling, ast.I.position);
@@ -1002,35 +1007,64 @@ public final class Checker implements Visitor {
 
     @Override
     public Object visitProcFuncs(ProcFunc ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return null;
     }
 
-    
+    public void finalCheck(){ 
+    //System.out.println("Tamano de lista: " + listProcFuncs.size()); 
+      for(ProcFunc thisProcFunc : listProcFuncs){ 
+        if(thisProcFunc.getClass() == RecursiveFunction.class){ 
+            thisProcFunc = (RecursiveFunction)thisProcFunc; 
+            RecursiveFunction thisFunc = (RecursiveFunction)thisProcFunc; 
+            idTable.openScope(); 
+            thisFunc.FPS.visit(this, null); 
+            TypeDenoter eType = (TypeDenoter) thisFunc.E.visit(this, null); 
+            idTable.closeScope(); 
+            //System.out.println(eType); 
+            //System.out.println(thisFunc.T); 
+            if (! thisFunc.T.equals(eType)) 
+                reporter.reportError ("body of function \"%\" has wrong type", 
+                thisFunc.I.spelling, thisFunc .E.position); 
+        } else if(thisProcFunc.getClass() == RecursiveProcedure.class){ 
+                thisProcFunc = (RecursiveProcedure)thisProcFunc; 
+                RecursiveProcedure thisProc = (RecursiveProcedure)thisProcFunc; 
+                 
+                idTable.openScope(); 
+                thisProc.FPS.visit(this, null); 
+                thisProc.C.visit(this, null); 
+                idTable.closeScope(); 
+                } 
+       } 
+    }
     @Override
     public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
     ast.P.visit(this, null);
+    finalCheck(); 
     return null;
   } 
     
     @Override
     public Object visitRecursiveProcedure(RecursiveProcedure ast, Object o) {
-        idTable.openScope();
-        ast.FPS.visit(this, null); // Formal Parameter
-        ast.C.visit(this, null); // Command
-        idTable.closeScope();
+        idTable.enter (ast.I.spelling, ast); // allow recursion 
+        if (ast.duplicated) 
+          reporter.reportError ("identifier \"%\" already declared", 
+                                ast.I.spelling, ast.position); 
+        listProcFuncs.add(ast); 
         return null;
     }
 
     @Override
     public Object visitRecursiveFunction(RecursiveFunction ast, Object o) {
-    idTable.openScope();
-    ast.FPS.visit(this, null);
-    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
-    idTable.closeScope();
-    if (ast.T.visit(this,null).equals(eType) == false)
-      reporter.reportError ("Wrong type inside body's function",
-              ast.I.spelling, ast.E.position);
-    return null;    }
+        ast.T = (TypeDenoter) ast.T.visit(this, null); 
+        idTable.enter (ast.I.spelling, ast); // allow recursion 
+        if (ast.duplicated) 
+            reporter.reportError ("identifier \"%\" already declared", 
+                            ast.I.spelling, ast.position); 
+        listProcFuncs.add(ast); 
+        //System.out.println("Recusive Function added"); 
+        //System.out.println("String Id: " + ast.I.spelling + ", ast: " + ast.toString()); 
+        return null;  
+    }
 
     @Override
     public Object visitSequentialProcFunc(SequencialProcFunc ast, Object o) {

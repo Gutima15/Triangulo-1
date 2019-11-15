@@ -22,7 +22,7 @@ public final class IdentificationTable {
   private IdEntry latest;
   private IdentificationTable localEntries;
   private boolean localReading; 
-
+  private boolean recursiveFlag;
   public IdentificationTable () {
     level = 0;
     latest = null;
@@ -122,5 +122,11 @@ public final class IdentificationTable {
 
     return attr;
   }
-
+  public boolean isRecursiveFlag() {
+    return recursiveFlag;
+  }
+ 
+  public void setRecursiveFlag(boolean recursiveFlag) {
+    this.recursiveFlag = recursiveFlag;    
+  }
 }
