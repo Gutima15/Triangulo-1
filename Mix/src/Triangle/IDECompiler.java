@@ -74,6 +74,7 @@ public class IDECompiler {
             System.out.println("Compilation was successful.");
             System.out.println("Generating html file...");
             scanner.finishWriting();
+            System.out.println("Generating xml file...");
         }else{
             System.out.println("Compilation was unsuccessful.");
         }
