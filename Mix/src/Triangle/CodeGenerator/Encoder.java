@@ -176,7 +176,27 @@ public final class Encoder implements Visitor {
     emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr);
     return null;
   }
+ @Override //Modificado por @Lery & @Steph
+    public Object visitDoUntilCommand(DoUntilCommand ast, Object o) { //se agrego desde Frame hasta return null
+        Frame frame = (Frame) o;  
+        int loopAddr;  //se modifico eliminando jumpAddr
+        loopAddr = nextInstrAddr;
+        ast.C.visit(this, frame); //se ejecuta el comando c,  
+        ast.E.visit(this, frame); // se evalua la expresion E para verificar si es falsa
+        emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, loopAddr); //si E es falsa, se termina con repetición
+        return null;
+    }
 
+    @Override //Modificado por @Lery & @Steph
+    public Object visitDoWhileCommand(DoWhileCommand ast, Object o) { //se agrego desde Frame hasta return null
+        Frame frame = (Frame) o;  
+        int loopAddr;  //se modifico eliminando jumpAddr
+        loopAddr = nextInstrAddr;
+        ast.C.visit(this, frame); //se ejecuta el comando c,  
+        ast.E.visit(this, frame); // se evalua la expresion E para verificar si es falsa
+        emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr); //si E es falsa, se termina con repetición
+        return null;
+    }
   public Object visitUntilCommand(UntilCommand ast, Object o) { //
     Frame frame = (Frame) o;// 
     int jumpAddr, loopAddr;//
@@ -1030,25 +1050,42 @@ public final class Encoder implements Visitor {
     }
   }
 
-    @Override
-    public Object visitDoUntilCommand(DoUntilCommand ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+   
 
-    @Override
-    public Object visitDoWhileCommand(DoWhileCommand ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
+    @Override //modificado por @Steph & @Lery
     public Object visitForCommand(ForCommand ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Frame frame = (Frame) o;
+        int loopAddr, jumpComp, varForControl, extraSize1, extraSize2;
+        extraSize1 = (Integer) ast.E2.visit(this, frame);
+        Frame frame1 = new Frame (frame, extraSize1);
+        varForControl = nextInstrAddr;
+        extraSize2 = (Integer) ast.FD.visit(this, frame1);// extraSize2 es la variable de control
+        jumpComp = nextInstrAddr;
+        emit(Machine.JUMPop, 0, Machine.CBr, 0);
+        Frame frame2 = new Frame (frame, extraSize2 + extraSize1);
+        loopAddr = nextInstrAddr;
+        ast.C1.visit(this, frame2);
+        emit(Machine.CALLop, varForControl, Machine.PBr, Machine.succDisplacement); // se aumenta la variable de control estraSize2
+        patch(jumpComp, nextInstrAddr);
+        emit(Machine.LOADop, extraSize1 + extraSize2, Machine.STr, -2); // la variable de control es llamada
+        emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.geDisplacement); //la variable de control de control es comparado con la expresion que evalua
+        emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr);
+        emit(Machine.POPop, 0, 0, extraSize1 + extraSize2); // se limpia la pila
+        
+        return new Integer(0);
     }
 
     @Override
     public Object visitVarInitDeclaration(VarInitDeclaration ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+     Frame frame = (Frame) o; //se agrego desde Frame hasta el return new...
+     int extraSize = ((Integer) ast.E.visit(this, frame)).intValue(); // Esto es lo que entendemos como "S" en la presentacion
+     int valSize = ((Integer) ast.E.visit(this, frame)).intValue();
+     ast.entity = new KnownAddress(valSize, frame.level, frame.size);
+     extraSize = valSize;
+     writeTableDetails(ast);
+     return new Integer(extraSize);
+  }
+
 
     @Override
     public Object visitProcFuncs(ProcFunc ast, Object o) {
@@ -1080,8 +1117,10 @@ public final class Encoder implements Visitor {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
+    @Override //modificado por @Steph & @Lery
     public Object visitForDeclaration(ForDeclaration ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Frame frame = (Frame) o; //se agregan las tres lineas
+        int extraSize1 = ((Integer)ast.E.visit(this, frame)).intValue();
+        return new Integer(extraSize1);
     }
 }
