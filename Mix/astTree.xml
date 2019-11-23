@@ -16,7 +16,7 @@
 <Identifier value="a"/>
 </SimpleVname>
 </VnameExpression>
-<Operator value="-"/>
+<Operator value="+"/>
 <IntegerExpression>
 <IntegerLiteral value="1"/>
 </IntegerExpression>
@@ -29,7 +29,7 @@
 <ConstActualParameter>
 <VnameExpression>
 <SimpleVname>
-<Identifier value="a"/>
+<Identifier value="b"/>
 </SimpleVname>
 </VnameExpression>
 </ConstActualParameter>

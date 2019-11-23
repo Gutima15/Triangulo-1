@@ -59,12 +59,12 @@ public class IDECompiler {
             Checker checker = new Checker(report);        //Comentar para que funcione el sintï¿½ctico solo
             checker.check(rootAST);                       //Comentar para que funcione el sintï¿½ctico solo
             if (report.numErrors == 0) {
-                //System.out.println("Code Generation ...");//Comentar para que funcione el sintï¿½ctico solo
-                //Encoder encoder = new Encoder(report);    //Comentar para que funcione el sintï¿½ctico solo
-               // encoder.encodeRun(rootAST, false);        //Comentar para que funcione el sintï¿½ctico solo
+                System.out.println("Code Generation ...");//Comentar para que funcione el sintï¿½ctico solo
+                Encoder encoder = new Encoder(report);    //Comentar para que funcione el sintï¿½ctico solo
+                encoder.encodeRun(rootAST, false);        //Comentar para que funcione el sintï¿½ctico solo
                 
                 if (report.numErrors == 0) {
-    //                encoder.saveObjectProgram(sourceName.replace(".tri", ".tam"));//Comentar para que funcione el sintï¿½ctico solo
+                    encoder.saveObjectProgram(sourceName.replace(".tri", ".tam"));//Esta sección genera los .tam o tri para mostar.
                     success = true;
                 }
             }

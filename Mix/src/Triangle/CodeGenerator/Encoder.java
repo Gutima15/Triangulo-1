@@ -112,7 +112,9 @@ import Triangle.AbstractSyntaxTrees.WhileCommand;
 public final class Encoder implements Visitor {
 
 
+   // <editor-fold defaultstate="collapsed" desc=" Commands ">
   // Commands
+  // 
   public Object visitAssignCommand(AssignCommand ast, Object o) {
     Frame frame = (Frame) o;
     Integer valSize = (Integer) ast.E.visit(this, frame);
@@ -209,8 +211,11 @@ public final class Encoder implements Visitor {
     emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, loopAddr);//
     return null;//
   }
-
+   // </editor-fold>
+  
+   // <editor-fold defaultstate="collapsed" desc=" Expressions ">
   // Expressions
+
   public Object visitArrayExpression(ArrayExpression ast, Object o) {
     ast.type.visit(this, null);
     return ast.AA.visit(this, o);
@@ -303,8 +308,10 @@ public final class Encoder implements Visitor {
     return valSize;
   }
 
-
-  // Declarations
+  //</editor-fold>
+  
+  // <editor-fold defaultstate="collapsed" desc=" Declarations ">
+  // declarations
   public Object visitBinaryOperatorDeclaration(BinaryOperatorDeclaration ast,
 					       Object o){
     return new Integer(0);
@@ -408,8 +415,9 @@ public final class Encoder implements Visitor {
     writeTableDetails(ast);
     return new Integer(extraSize);
   }
-
-
+    //</editor-fold>
+  
+  // <editor-fold defaultstate="collapsed" desc=" Array Aggregates ">
   // Array Aggregates
   public Object visitMultipleArrayAggregate(MultipleArrayAggregate ast,
 					    Object o) {
@@ -439,8 +447,9 @@ public final class Encoder implements Visitor {
 					   Object o) {
     return ast.E.visit(this, o);
   }
-
-
+  //</editor-fold>
+  
+  // <editor-fold defaultstate="collapsed" desc=" Formal Parameters ">
   // Formal Parameters
   public Object visitConstFormalParameter(ConstFormalParameter ast, Object o) {
     Frame frame = (Frame) o;
@@ -496,8 +505,9 @@ public final class Encoder implements Visitor {
 	 SingleFormalParameterSequence ast, Object o) {
     return ast.FP.visit (this, o);
   }
+  //</editor-fold>
 
-
+  // <editor-fold defaultstate="collapsed" desc=" Actual Parameters ">
   // Actual Parameters
   public Object visitConstActualParameter(ConstActualParameter ast, Object o) {
     return ast.E.visit (this, o);
@@ -568,7 +578,9 @@ public final class Encoder implements Visitor {
     return ast.AP.visit (this, o);
   }
 
-
+  //</editor-fold>
+  
+  // <editor-fold defaultstate="collapsed" desc=" Type Denoters ">
   // Type Denoters
   public Object visitAnyTypeDenoter(AnyTypeDenoter ast, Object o) {
     return new Integer(0);
@@ -663,7 +675,9 @@ public final class Encoder implements Visitor {
     return new Integer(fieldSize);
   }
 
-
+  //</editor-fold>
+  
+  // <editor-fold defaultstate="collapsed" desc=" Literals. Identifiers and Operators ">  
   // Literals, Identifiers and Operators
   public Object visitCharacterLiteral(CharacterLiteral ast, Object o) {
     return null;
@@ -719,7 +733,9 @@ public final class Encoder implements Visitor {
     return null;
   }
 
-
+  //</editor-fold>
+  
+  // <editor-fold defaultstate="collapsed" desc=" Value-or-variable names ">
   // Value-or-variable names
   public Object visitDotVname(DotVname ast, Object o) {
     Frame frame = (Frame) o;
@@ -765,8 +781,8 @@ public final class Encoder implements Visitor {
     }
     return baseObject;
   }
-
-
+  //</editor-fold>
+  
   // Programs
   public Object visitProgram(Program ast, Object o) {
     return ast.C.visit(this, o);
@@ -1097,10 +1113,21 @@ public final class Encoder implements Visitor {
     public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
+    // <editor-fold defaultstate="collapsed" desc=" Frame recordatory ">
+    //Recuerde: Un frame contiene:
+    //1. Un puntero dinámico (dynamic link) hacia el siguiente frame en la pila (stack) (El frame del llamador/the frame of the caller)
+    //2. Una dirección de retorno.
+    //3. Variables locales de la activación en actual o en ejecución (current activation).
+    //</editor-fold>    
     @Override
     public Object visitLocalDeclaration(LocalDeclaration ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Frame frame = (Frame) o; //se crea un nuevo frame para trabajar este procedimiento activo.(Este frame será cargado al stack)
+        int extraSize1 = ((Integer) ast.D1.visit(this, frame)).intValue(); 
+        Frame frameD2= new Frame(frame, extraSize1);
+        int extraSize2 = ((Integer) ast.D2.visit(this, frameD2)).intValue()+extraSize1;        
+        return new Integer(extraSize2);
+
     }
 
     @Override

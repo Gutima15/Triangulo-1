@@ -3,5 +3,5 @@ let
   in var b init a+1 
   end
 in
-  putint(a)
+  putint(b)
 end
