@@ -59,9 +59,9 @@ public class IDECompiler {
             Checker checker = new Checker(report);        //Comentar para que funcione el sint�ctico solo
             checker.check(rootAST);                       //Comentar para que funcione el sint�ctico solo
             if (report.numErrors == 0) {
-                System.out.println("Code Generation ...");//Comentar para que funcione el sint�ctico solo
-                Encoder encoder = new Encoder(report);    //Comentar para que funcione el sint�ctico solo
-                encoder.encodeRun(rootAST, false);        //Comentar para que funcione el sint�ctico solo
+                //System.out.println("Code Generation ...");//Comentar para que funcione el sint�ctico solo
+                //Encoder encoder = new Encoder(report);    //Comentar para que funcione el sint�ctico solo
+               // encoder.encodeRun(rootAST, false);        //Comentar para que funcione el sint�ctico solo
                 
                 if (report.numErrors == 0) {
     //                encoder.saveObjectProgram(sourceName.replace(".tri", ".tam"));//Comentar para que funcione el sint�ctico solo

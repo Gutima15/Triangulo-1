@@ -437,19 +437,17 @@ public final class Checker implements Visitor {
 
   
  //Modificaciones hechas por @StephanieDelgago & Jorge G
-  public Object visitLocalDeclaration(LocalDeclaration ast, Object o) {
-    idTable.openScope();
+  //consejo: Guardar la última pos de local, antes de leer d1
+ //Luego de leer d1 y d2 puedo asignar el puntero primer puntero de D2 a la global para que no me de el error de tipos no inicializados.
+//En el proceso yo busco en la tabla de ID hasta encontrar la posible referencia que se usó en d2 para ligarla a la de D1
+  public IdEntry posOriginal;
+  public Object visitLocalDeclaration(LocalDeclaration ast, Object o) { 
+    idTable.setLocalEntry(true);
+    ast.D1.visit(this, null);// Lee el primer D1 
+    idTable.setLocalDone(true); 
     
-    //IdentificationTable snap = new IdentificationTable(idTable);// Se crea una tabla instantanea con el idTable.    
-    
-    //snap.startLocalReading(idTable);//Llama al procedimiento starLocalReading para almacenar la tabla local que esta para leer.
-    //idTable = snap;// Asigna a idTable la tabla snap volviendola como tabla principal.
-    ast.D1.visit(this, null);// Lee el primer D1 y verifica que use el bloque local.    
-    //idTable.stopLocalReading();//Descarta el bloque local y continua.
-     
-    ast.D2.visit(this,null);// Lee la segunda D2 y verifica que use el bloque local.
-    
-   idTable.closeScope();
+    ast.D2.visit(this,null);// Lee la segunda D2 y verifica que use el bloque local.    
+    idTable.changingPointersLocalDeclaration();
     return null;
   }
 

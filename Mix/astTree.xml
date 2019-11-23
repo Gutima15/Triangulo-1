@@ -1,40 +1,19 @@
 <?xml version="1.0" standalone="yes"?>
 <Program>
 <LetCommand>
-<SequentialDeclaration>
-<VarInitDeclaration>
-<Identifier value="top"/>
+<LocalDeclaration>
+<ConstDeclaration>
+<Identifier value="a"/>
 <IntegerExpression>
-<IntegerLiteral value="10"/>
+<IntegerLiteral value="1"/>
 </IntegerExpression>
-</VarInitDeclaration>
+</ConstDeclaration>
 <VarInitDeclaration>
-<Identifier value="top2"/>
-<IntegerExpression>
-<IntegerLiteral value="10"/>
-</IntegerExpression>
-</VarInitDeclaration>
-</SequentialDeclaration>
-<WhileCommand>
+<Identifier value="b"/>
 <BinaryExpression>
 <VnameExpression>
 <SimpleVname>
-<Identifier value="top"/>
-</SimpleVname>
-</VnameExpression>
-<Operator value=">"/>
-<IntegerExpression>
-<IntegerLiteral value="0"/>
-</IntegerExpression>
-</BinaryExpression>
-<AssignCommand>
-<SimpleVname>
-<Identifier value="top"/>
-</SimpleVname>
-<BinaryExpression>
-<VnameExpression>
-<SimpleVname>
-<Identifier value="top"/>
+<Identifier value="a"/>
 </SimpleVname>
 </VnameExpression>
 <Operator value="-"/>
@@ -42,7 +21,19 @@
 <IntegerLiteral value="1"/>
 </IntegerExpression>
 </BinaryExpression>
-</AssignCommand>
-</WhileCommand>
+</VarInitDeclaration>
+</LocalDeclaration>
+<CallCommand>
+<Identifier value="putint"/>
+<SingleActualParameterSequence>
+<ConstActualParameter>
+<VnameExpression>
+<SimpleVname>
+<Identifier value="a"/>
+</SimpleVname>
+</VnameExpression>
+</ConstActualParameter>
+</SingleActualParameterSequence>
+</CallCommand>
 </LetCommand>
 </Program>

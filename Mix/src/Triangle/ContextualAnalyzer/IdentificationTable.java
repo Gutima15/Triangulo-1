@@ -21,7 +21,10 @@ public final class IdentificationTable {
   private int level;
   private IdEntry latest;
   private IdentificationTable localEntries;
-  private boolean localReading; 
+  private IdEntry LocalEntry; //Guarda la declaración D1 del local declacation
+  private IdEntry LocalDone; // Guarda la declaración D2 del local declacation
+  private boolean isLocalEntry;
+  private boolean isLocalDone; 
   private boolean recursiveFlag;
   public IdentificationTable () {
     level = 0;
@@ -58,17 +61,19 @@ public final class IdentificationTable {
   }
 
 // Modificaciones hechas por @StephanieDelgago.
-  public void startLocalReading(IdentificationTable localTable){
-    this.localEntries= localTable; //Se asigna a localEntries el contenido de la tabla.
-    this.localReading= true; //true Informa que se esta leyendo.
-  }
+  public void setLocalEntry(boolean localE) {
+        this.isLocalEntry = localE;
+    }
 
- //Modificaciones hechas por @StephanieDelgago.
-  public void stopLocalReading(){
-    this.localEntries= null;// No se asigna nada a localEntries.
-    this.localReading= false;// false informa que no se estÃ¡ leyendo.
-  }
-
+    public void setLocalDone(boolean localD ) {
+        this.isLocalDone = localD;
+    }  
+   
+    public void changingPointersLocalDeclaration(){
+        IdEntry latestBeforeLocal = LocalEntry.previous;
+        LocalDone.previous = latestBeforeLocal;
+    }
+    
   // Makes a new entry in the identification table for the given identifier
   // and attribute. The new entry belongs to the current level.
   // duplicated is set to to true iff there is already an entry for the
@@ -81,17 +86,33 @@ public final class IdentificationTable {
 
     // Check for duplicate entry ...
     while (searching) {
-      if (entry == null || entry.level < this.level)
+      if (entry == null || entry.level < this.level){
         searching = false;
+      }
       else if (entry.id.equals(id)) {
         present = true;
         searching = false;
-       } else
+       } else{
        entry = entry.previous;
+      }
     }
-
     attr.duplicated = present;
-    // Add new entry ...
+    // Local Declarations
+    //Added by @Jorge G
+    if(isLocalEntry){        
+        entry= new IdEntry(id, attr, this.level, this.latest);//Note que, cuando recibimos el inicio de una declaración local
+        // tenemos que guardar la condición de la tabla justo antes de leer la declación.
+        this.LocalEntry= entry; //instanciamos localEntry con los valores iniciales pre declaración local
+        this.latest = entry; 
+        this.isLocalEntry = false; //para indicar que terminamos
+        
+    }else if(isLocalDone){ //Lo mismo de arriba pero para registrar el fin de la declaración.
+        entry= new IdEntry(id, attr, this.level, this.latest);
+        this.LocalDone=entry;
+        this.latest = entry;
+        this.isLocalDone = false;
+        
+    }//Comportamiento en casos típicos del lenguaje.
     entry = new IdEntry(id, attr, this.level, this.latest);
     this.latest = entry;
   }
