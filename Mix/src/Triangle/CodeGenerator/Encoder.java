@@ -1122,7 +1122,8 @@ public final class Encoder implements Visitor {
 
         @Override
     public Object visitProcFuncs(ProcFunc ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+        return 0;  
     }
 
     @Override
@@ -1140,21 +1141,22 @@ public final class Encoder implements Visitor {
         
         Frame frame = (Frame) o;
         int jumpAddress = nextInstrAddr;
-        int argsSize = 0;
+        int argsSize=0;
 
         emit(Machine.JUMPop, 0, Machine.CBr, 0);
         ast.entity = new KnownRoutine (Machine.closureSize, frame.level,
                 nextInstrAddr);
         writeTableDetails(ast);
-        System.out.println("Im here - Recursive Procedure");
+        // System.out.println("Im here - Recursive Procedure");
         if (frame.level == Machine.maxRoutineLevel)
-          reporter.reportRestriction("Can't nest routines so deeply");
+          reporter.reportRestriction("Can't perform such deep routines (more than 7 levels).");
         else {
           Frame frame1 = new Frame(frame.level + 1, 0);
-          argsSize = ((Integer) ast.FPS.visit(this, frame1));
+          argsSize = ((Integer) ast.FPS.visit(this, frame1)); // Revisa el Formal  Parameter
           Frame frame2 = new Frame(frame.level + 1, Machine.linkDataSize);
           ast.C.visit(this, frame2);
         }
+        
         emit(Machine.RETURNop, 0, 0, argsSize);
         patch(jumpAddress, nextInstrAddr);
         return 0;    
@@ -1172,7 +1174,7 @@ public final class Encoder implements Visitor {
         writeTableDetails(ast);
         System.out.println("Im here - Recursive Function");
         if (frame.level == Machine.maxRoutineLevel)
-          reporter.reportRestriction("Can't nest routines more than 7 deep");
+          reporter.reportRestriction("Can't perform such deep routines (more than 7 levels).");
         else {
           Frame frame1 = new Frame(frame.level + 1, 0);
           argsSize = ((Integer) ast.FPS.visit(this, frame1));
