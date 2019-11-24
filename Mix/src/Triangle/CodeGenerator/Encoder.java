@@ -1103,16 +1103,6 @@ public final class Encoder implements Visitor {
      return new Integer(extraSize);
   }
 
-
-    @Override
-    public Object visitProcFuncs(ProcFunc ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     
     // <editor-fold defaultstate="collapsed" desc=" Frame recordatory ">
     //Recuerde: Un frame contiene:
@@ -1130,19 +1120,77 @@ public final class Encoder implements Visitor {
 
     }
 
+        @Override
+    public Object visitProcFuncs(ProcFunc ast, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
+        Frame frame = (Frame) o;
+        int instrAddrSnapshot = nextInstrAddr;
+        int extraSize1 = (Integer) ast.P.visit(this, frame);
+        nextInstrAddr = instrAddrSnapshot;
+        extraSize1 = (Integer) ast.P.visit(this, frame);
+        return extraSize1; 
+    }
+    
     @Override
     public Object visitRecursiveProcedure(RecursiveProcedure ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        Frame frame = (Frame) o;
+        int jumpAddress = nextInstrAddr;
+        int argsSize = 0;
+
+        emit(Machine.JUMPop, 0, Machine.CBr, 0);
+        ast.entity = new KnownRoutine (Machine.closureSize, frame.level,
+                nextInstrAddr);
+        writeTableDetails(ast);
+        System.out.println("Im here - Recursive Procedure");
+        if (frame.level == Machine.maxRoutineLevel)
+          reporter.reportRestriction("Can't nest routines so deeply");
+        else {
+          Frame frame1 = new Frame(frame.level + 1, 0);
+          argsSize = ((Integer) ast.FPS.visit(this, frame1));
+          Frame frame2 = new Frame(frame.level + 1, Machine.linkDataSize);
+          ast.C.visit(this, frame2);
+        }
+        emit(Machine.RETURNop, 0, 0, argsSize);
+        patch(jumpAddress, nextInstrAddr);
+        return 0;    
     }
 
     @Override
     public Object visitRecursiveFunction(RecursiveFunction ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Frame frame = (Frame) o;
+        int jumpAddress = nextInstrAddr;
+        int argsSize = 0;
+        int valSize = 0;
+
+        emit(Machine.JUMPop, 0, Machine.CBr, 0);
+        ast.entity = new KnownRoutine(Machine.closureSize, frame.level, nextInstrAddr);
+        writeTableDetails(ast);
+        System.out.println("Im here - Recursive Function");
+        if (frame.level == Machine.maxRoutineLevel)
+          reporter.reportRestriction("Can't nest routines more than 7 deep");
+        else {
+          Frame frame1 = new Frame(frame.level + 1, 0);
+          argsSize = ((Integer) ast.FPS.visit(this, frame1));
+          Frame frame2 = new Frame(frame.level + 1, Machine.linkDataSize);
+          valSize = ((Integer) ast.E.visit(this, frame2));
+        }
+        emit(Machine.RETURNop, valSize, 0, argsSize);
+        patch(jumpAddress, nextInstrAddr);
+        return 0;    
     }
 
     @Override
     public Object visitSequentialProcFunc(SequencialProcFunc ast, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Frame frame = (Frame) o;
+        int extraSize1 = ((Integer) ast.P1.visit(this, frame));
+        Frame frame1 = new Frame(frame, extraSize1);
+        int extraSize2 = ((Integer) ast.P2.visit(this, frame1));
+        return (extraSize1 + extraSize2);    
     }
 
     @Override //modificado por @Steph & @Lery
