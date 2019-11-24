@@ -1172,7 +1172,7 @@ public final class Encoder implements Visitor {
         emit(Machine.JUMPop, 0, Machine.CBr, 0);
         ast.entity = new KnownRoutine(Machine.closureSize, frame.level, nextInstrAddr);
         writeTableDetails(ast);
-        System.out.println("Im here - Recursive Function");
+        //System.out.println("Im here - Recursive Function");
         if (frame.level == Machine.maxRoutineLevel)
           reporter.reportRestriction("Can't perform such deep routines (more than 7 levels).");
         else {

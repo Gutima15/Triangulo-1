@@ -1,0 +1,13 @@
+let
+recursive
+  proc a() ~ put('Z') end
+  and
+  func b() : Integer ~ 5
+  and
+  proc c() ~ putint (0) end
+
+end
+
+in
+  putint(1)
+end

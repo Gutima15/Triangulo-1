@@ -1,0 +1,15 @@
+let
+  var num : Integer
+in 
+  if num > 20 then 
+    put ('>')
+  else if num = 20 then
+    put ('=')
+  else if num < 20 then
+    put ('<')
+  else
+    put ('0')
+  end 
+  end 
+  end 
+end

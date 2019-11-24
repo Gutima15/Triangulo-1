@@ -1,0 +1,9 @@
+let 
+    var top init 10
+in
+loop
+    do
+      top := top - 1 
+    while top > 0 
+    repeat
+end

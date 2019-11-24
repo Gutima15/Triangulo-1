@@ -1,0 +1,10 @@
+let
+  var top init 1 
+in
+  loop
+  until top < 10
+  do
+    putint(top) ;
+    top := top +1
+  repeat
+end

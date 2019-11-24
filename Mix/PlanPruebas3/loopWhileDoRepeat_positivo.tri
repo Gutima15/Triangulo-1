@@ -1,0 +1,10 @@
+let
+  const base ~ 10;
+  var top init 15
+in
+  loop
+  while top > base do
+    putint (top) ;
+    top := top - 1
+  repeat
+end

@@ -1,0 +1,7 @@
+let 
+  local const a~1 
+  in var b init a+1 
+  end
+in
+  putint(b)
+end

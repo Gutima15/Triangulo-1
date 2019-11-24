@@ -1,0 +1,8 @@
+let
+  var top init 0
+in
+  loop for i ~ top to 15 do 
+    top := top + 1 ; 
+    putint (top) 
+  repeat
+end

@@ -1,0 +1,9 @@
+let 
+    var top init 2
+in
+loop
+    do
+      top := top - 1 
+    until top < 4 
+    repeat
+end
