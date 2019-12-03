@@ -15,6 +15,7 @@
 package Triangle.ContextualAnalyzer;
 
 import Triangle.AbstractSyntaxTrees.Declaration;
+import Triangle.AbstractSyntaxTrees.ForCommand;
 
 public final class IdentificationTable {
 
@@ -150,4 +151,8 @@ public final class IdentificationTable {
   public void setRecursiveFlag(boolean recursiveFlag) {
     this.recursiveFlag = recursiveFlag;    
   }
+
+    void enter(String spelling, ForCommand ast) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

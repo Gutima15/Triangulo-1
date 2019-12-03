@@ -199,22 +199,19 @@ public final class Checker implements Visitor {
     return null;///
   }
   //Modificaciones hechas por @Jorge Gutiï¿½rrez & @LerySanchez
-  public Object visitForCommand(ForCommand ast, Object o) {//
-    TypeDenoter e1Type = (TypeDenoter) ast.E2.visit(this, null); //
-    TypeDenoter e2Type = (TypeDenoter) ast.FD.E.visit(this, null); // Aquï¿½ accedemos propiamente a la expresiï¿½n que existe dentro de la declaraciï¿½n For
-    
-    if (! e1Type.equals(StdEnvironment.integerType)) //
-      reporter.reportError("Integer expression expected here", "", ast.E2.position); //
+  public Object visitForCommand(ForCommand ast, Object o) {//    
+   //ast.FD.I.visit(this, null);
+    //ast.FD.E.visit(this, null);   
+
+    TypeDenoter e2Type = (TypeDenoter) ast.E2.visit(this, null); //   
     if (! e2Type.equals(StdEnvironment.integerType)) //
-      reporter.reportError("Integer expression expected here", "", ast.FD.E.position); // validamos que las expresiones sean enteras
+      reporter.reportError("Integer expression expected here", "", ast.E2.position); // 
     
     idTable.openScope();
-    ast.FD.I.visit(this, null); //visita especificamente I por que sino el comando y la declaracion for existirian en el mismo ambiente
-    //ast.FD.visit(this , null);
+    ast.FD.visit(this, null);
     ast.C1.visit(this, null); //
     idTable.closeScope();
-    return null;
-    
+    return null;    
     }
   // </editor-fold>
   
@@ -821,9 +818,12 @@ public final class Checker implements Visitor {
         ast.type = ((ConstDeclaration) binding).E.type;
         ast.variable = false;
       } else if(binding instanceof VarInitDeclaration){ // Se agrega un tipo nuevo para los VName, estas pueden ser
-          ast.type =((VarInitDeclaration) binding).E.type;  // VarInitDeclaration de ahora en adelante.
-          ast.variable=true;   //Permitimos que el identificador sea visto como variable, es decir, que puede ser pasado como referencia y destino de una asignaciï¿½n.
-      } else if (binding instanceof VarDeclaration) {
+          ast.type =((VarInitDeclaration) binding).E.type;  // VarInitDeclaration de ahora en adelante.        
+          ast.variable=true;   //Permitimos que el identificador sea visto como variable, es decir, que puede ser pasado como referencia y destino de una asignación.       
+      }else if(binding instanceof ForDeclaration){
+          ast.type =((ForDeclaration) binding).E.type;  // VarInitDeclaration de ahora en adelante.         
+          ast.variable=false;   //Permitimos que el identificador no sea visto como variable, es decir, que no puede ser pasado como referencia y destino de una asignación.       
+      }else if (binding instanceof VarDeclaration) {
         ast.type = ((VarDeclaration) binding).T;
         ast.variable = true;
       } else if (binding instanceof ConstFormalParameter) {
@@ -1073,18 +1073,15 @@ public final class Checker implements Visitor {
 
     @Override
     public Object visitForDeclaration(ForDeclaration ast, Object o) {
-        //declaracion de tipos    
-    TypeDenoter iType = (TypeDenoter) ast.I.visit(this, null); /// Nos aseguramos que siempre reciba una expresiï¿½n booleana
-    if (! iType.equals(StdEnvironment.integerType)); //
-    reporter.reportError("Integer identifier expected", "", ast.I.position); //
-    //aqui se declara el id de tipo int.
+    TypeDenoter etype = (TypeDenoter) ast.E.visit(this, null);
+        if (! etype.equals(StdEnvironment.integerType)) //
+      reporter.reportError("Integer expression expected here", "", ast.E.position); // validamos que las expresiones sean enteras
+        
+    //TypeDenoter iType = (TypeDenoter) ast.I.visit(this, null); 
      idTable.enter(ast.I.spelling, ast);
-    if (ast.duplicated)
-      reporter.reportError ("identifier \"%\" is already declared before",
-              ast.I.spelling, ast.position);
-    //validar que no haya un for dentro de otro for con el mismo identificador.
-    ast.E.visit(this, null);
-    //visitar la expresion
+    if (ast.duplicated)//valida que el identificador no este declarado previamente
+      reporter.reportError ("identifier \"%\" already declared",
+                            ast.I.spelling, ast.position);
     return null;
    
     }

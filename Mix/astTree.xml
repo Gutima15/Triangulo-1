@@ -1,19 +1,24 @@
 <?xml version="1.0" standalone="yes"?>
 <Program>
-<LetCommand>
-<LocalDeclaration>
-<ConstDeclaration>
-<Identifier value="a"/>
+<ForCommand>
+<ForDeclaration>
+<Identifier value="i"/>
 <IntegerExpression>
 <IntegerLiteral value="1"/>
 </IntegerExpression>
-</ConstDeclaration>
-<VarInitDeclaration>
-<Identifier value="b"/>
+</ForDeclaration>
+<IntegerExpression>
+<IntegerLiteral value="10"/>
+</IntegerExpression>
+<SequentialCommand>
+<AssignCommand>
+<SimpleVname>
+<Identifier value="i"/>
+</SimpleVname>
 <BinaryExpression>
 <VnameExpression>
 <SimpleVname>
-<Identifier value="a"/>
+<Identifier value="i"/>
 </SimpleVname>
 </VnameExpression>
 <Operator value="+"/>
@@ -21,19 +26,19 @@
 <IntegerLiteral value="1"/>
 </IntegerExpression>
 </BinaryExpression>
-</VarInitDeclaration>
-</LocalDeclaration>
+</AssignCommand>
 <CallCommand>
 <Identifier value="putint"/>
 <SingleActualParameterSequence>
 <ConstActualParameter>
 <VnameExpression>
 <SimpleVname>
-<Identifier value="b"/>
+<Identifier value="i"/>
 </SimpleVname>
 </VnameExpression>
 </ConstActualParameter>
 </SingleActualParameterSequence>
 </CallCommand>
-</LetCommand>
+</SequentialCommand>
+</ForCommand>
 </Program>
